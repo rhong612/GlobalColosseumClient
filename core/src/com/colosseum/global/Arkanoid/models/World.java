@@ -2,11 +2,10 @@ package com.colosseum.global.Arkanoid.models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.colosseum.global.Arkanoid.Arkanoid;
-import com.colosseum.global.Arkanoid.models.Brick;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,25 +16,31 @@ import java.util.Iterator;
 
 public class World implements InputProcessor {
     private ArrayList<Brick> bricks;
-    private final int NUM_COLUMNS = 15;
-    private final int NUM_ROWS = 4;
-    private final int BRICK_HEIGHT = 30;
 
     private Panel playerPanel;
-    private final int PANEL_HEIGHT = 30;
 
     private Ball ball;
-    private final int BALL_RADIUS = 15;
 
     private float startX;
     private Viewport viewport;
 
     private boolean worldStart;
 
+    private Sound hitPanelSound;
+    private Sound hitWallSound;
+    private Sound missSound;
+
     public World(Viewport viewport) {
+        final int NUM_COLUMNS = 15;
+        final int NUM_ROWS = 4;
+        final int BRICK_HEIGHT = 30;
+        final int PANEL_HEIGHT = 30;
+        final int BALL_RADIUS = 15;
+
+
         worldStart = false;
         this.viewport = viewport;
-        playerPanel = new Panel(Arkanoid.GAME_WIDTH / 2, Arkanoid.GAME_HEIGHT / 10, Arkanoid.GAME_WIDTH / NUM_COLUMNS, PANEL_HEIGHT);
+        playerPanel = new Panel(Arkanoid.GAME_WIDTH / 2, Arkanoid.GAME_HEIGHT / 10, Arkanoid.GAME_WIDTH / NUM_COLUMNS * 2, PANEL_HEIGHT);
         ball = new Ball(playerPanel.getX(), playerPanel.getY() + playerPanel.getHeight(), BALL_RADIUS);
         bricks = new ArrayList<>();
         final int brickWidth = Arkanoid.GAME_WIDTH / NUM_COLUMNS;
@@ -46,13 +51,17 @@ public class World implements InputProcessor {
                 bricks.add(new Brick(i * brickWidth, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, brickWidth, BRICK_HEIGHT));
             }
         }
+
+        hitPanelSound = Gdx.audio.newSound(Gdx.files.internal("pong_panel.wav"));
+        hitWallSound = Gdx.audio.newSound(Gdx.files.internal("pong_wall.wav"));
+        missSound = Gdx.audio.newSound(Gdx.files.internal("pong_miss.wav"));
     }
 
     public void step(float delta) {
         if (worldStart) {
             ball.moveBall(delta);
+            checkCollisions();
         }
-        checkCollisions();
     }
 
     @Override
@@ -130,18 +139,26 @@ public class World implements InputProcessor {
         return ball;
     }
 
-    public void checkCollisions() {
+    private void checkCollisions() {
         //Left and Right Wall
         if (ball.getX() <= 0 || ball.getX() >= Arkanoid.GAME_WIDTH) {
             ball.getVelocity().x *= -1;
+            hitWallSound.play();
         }
         //Ceiling
         else if (ball.getY() >= Arkanoid.GAME_HEIGHT) {
             ball.getVelocity().y *= -1;
+            hitWallSound.play();
+        }
+        //Lose
+        else if (ball.getY() <= 0) {
+            missSound.play();
+            worldStart = false;
         }
         //Panel
         else if (ball.getX() > playerPanel.getX() && ball.getX() < playerPanel.getX() + playerPanel.getWidth() && ball.getY() > playerPanel.getY() && ball.getY() < playerPanel.getY() + playerPanel.getHeight()) {
             ball.getVelocity().y *= -1;
+            hitPanelSound.play();
         }
         //Brick
         else {
@@ -151,6 +168,7 @@ public class World implements InputProcessor {
 
                 if (ball.getX() > brick.getX() && ball.getX() < brick.getX() + brick.getWidth() && ball.getY() > brick.getY() && ball.getY() < brick.getY() + brick.getHeight()) {
                     ball.getVelocity().y *= -1;
+                    hitPanelSound.play();
                     brickIterator.remove();
                 }
             }
