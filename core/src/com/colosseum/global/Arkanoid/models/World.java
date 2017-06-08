@@ -9,6 +9,7 @@ import com.colosseum.global.Arkanoid.Arkanoid;
 import com.colosseum.global.Arkanoid.models.Brick;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -29,8 +30,10 @@ public class World implements InputProcessor {
     private float startX;
     private Viewport viewport;
 
+    private boolean worldStart;
 
     public World(Viewport viewport) {
+        worldStart = false;
         this.viewport = viewport;
         playerPanel = new Panel(Arkanoid.GAME_WIDTH / 2, Arkanoid.GAME_HEIGHT / 10, Arkanoid.GAME_WIDTH / NUM_COLUMNS, PANEL_HEIGHT);
         ball = new Ball(playerPanel.getX(), playerPanel.getY() + playerPanel.getHeight(), BALL_RADIUS);
@@ -46,7 +49,10 @@ public class World implements InputProcessor {
     }
 
     public void step(float delta) {
-
+        if (worldStart) {
+            ball.moveBall(delta);
+        }
+        checkCollisions();
     }
 
     @Override
@@ -66,6 +72,9 @@ public class World implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (!worldStart) {
+            worldStart = true;
+        }
         //0 for first finger
         if (pointer == 0) {
             startX = screenToWorldUnits(screenX, screenY).x;
@@ -121,4 +130,30 @@ public class World implements InputProcessor {
         return ball;
     }
 
+    public void checkCollisions() {
+        //Left and Right Wall
+        if (ball.getX() <= 0 || ball.getX() >= Arkanoid.GAME_WIDTH) {
+            ball.getVelocity().x *= -1;
+        }
+        //Ceiling
+        else if (ball.getY() >= Arkanoid.GAME_HEIGHT) {
+            ball.getVelocity().y *= -1;
+        }
+        //Panel
+        else if (ball.getX() > playerPanel.getX() && ball.getX() < playerPanel.getX() + playerPanel.getWidth() && ball.getY() > playerPanel.getY() && ball.getY() < playerPanel.getY() + playerPanel.getHeight()) {
+            ball.getVelocity().y *= -1;
+        }
+        //Brick
+        else {
+            Iterator<Brick> brickIterator = bricks.iterator();
+            while (brickIterator.hasNext()) {
+                Brick brick = brickIterator.next();
+
+                if (ball.getX() > brick.getX() && ball.getX() < brick.getX() + brick.getWidth() && ball.getY() > brick.getY() && ball.getY() < brick.getY() + brick.getHeight()) {
+                    ball.getVelocity().y *= -1;
+                    brickIterator.remove();
+                }
+            }
+        }
+    }
 }
