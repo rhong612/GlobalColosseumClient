@@ -10,7 +10,7 @@ import com.colosseum.global.NetworkManager;
 /**
  *
  */
-public class Arkanoid implements Screen, InputProcessor {
+public class Arkanoid implements Screen {
 
     private NetworkManager manager;
     private World world;
@@ -25,7 +25,6 @@ public class Arkanoid implements Screen, InputProcessor {
     @Override
     public void show() {
         playerScore = 0;
-        Gdx.input.setInputProcessor(this);
         world = new World(this);
         worldRenderer = new WorldRenderer(world);
         hud = new Hud(playerScore);
@@ -63,46 +62,6 @@ public class Arkanoid implements Screen, InputProcessor {
     @Override
     public void dispose() {
         hud.dispose();
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
     }
 
     /**
