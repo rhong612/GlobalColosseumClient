@@ -15,22 +15,21 @@ public class World implements InputProcessor {
     private ArrayList<Brick> bricks;
     private final int NUM_COLUMNS = 15;
     private final int NUM_ROWS = 4;
-    private final float BRICK_HEIGHT = 10f;
-    private Arkanoid arkanoid;
+    private final int BRICK_HEIGHT = 30;
     private Panel playerPanel;
 
     private int startX;
 
 
-    public World(Arkanoid arkanoid) {
-        this.arkanoid = arkanoid;
-        playerPanel = new Panel();
+    public World() {
+        //playerPanel = new Panel(); TODO: initialize panel
         bricks = new ArrayList<>();
+        final int brickWidth = Arkanoid.GAME_WIDTH / NUM_COLUMNS;
+
         //Construct bricks
         for (int i = 0; i < NUM_COLUMNS; i++) {
-            for (int j = 0; j < NUM_ROWS; j++) {
-                int brickWidth = Gdx.graphics.getWidth() / NUM_COLUMNS;
-                bricks.add(new Brick(i * brickWidth, j * (Gdx.graphics.getHeight() / BRICK_HEIGHT), brickWidth, BRICK_HEIGHT));
+            for (int j = 1; j <= NUM_ROWS; j++) {
+                bricks.add(new Brick(i * brickWidth, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, brickWidth, BRICK_HEIGHT));
             }
         }
     }
@@ -91,5 +90,9 @@ public class World implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public ArrayList<Brick> getBricks() {
+        return bricks;
     }
 }

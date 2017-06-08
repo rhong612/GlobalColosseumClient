@@ -14,19 +14,17 @@ public class Hud extends Stage{
 
     private Label scoreTitleLabel;
     private Label scoreNumberLabel;
-    private int playerScore;
+    private Arkanoid arkanoid;
 
-    public Hud(int playerScore) {
+    public Hud(Arkanoid arkanoid) {
         super();
-        this.playerScore = playerScore;
-
+        this.arkanoid = arkanoid;
         scoreTitleLabel = new Label("SCORE", new Label.LabelStyle(new BitmapFont(), Color.BLUE));
-        scoreNumberLabel = new Label(Integer.toString(playerScore), new Label.LabelStyle(new BitmapFont(), Color.BLUE));
+        scoreNumberLabel = new Label(Integer.toString(arkanoid.getPlayerScore()), new Label.LabelStyle(new BitmapFont(), Color.BLUE));
 
         Table labelTable = new Table();
         labelTable.top();
         labelTable.setFillParent(true);
-
         labelTable.add(scoreTitleLabel);
         labelTable.row();
         labelTable.add(scoreNumberLabel);
@@ -36,7 +34,7 @@ public class Hud extends Stage{
 
     @Override
     public void draw() {
-        scoreNumberLabel.setText(Integer.toString(playerScore));
+        scoreNumberLabel.setText(Integer.toString(arkanoid.getPlayerScore()));
         super.draw();
     }
 }

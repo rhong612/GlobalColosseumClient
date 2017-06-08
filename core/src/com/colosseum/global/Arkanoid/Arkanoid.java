@@ -1,9 +1,12 @@
 package com.colosseum.global.Arkanoid;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.colosseum.global.Arkanoid.models.World;
 import com.colosseum.global.NetworkManager;
 
@@ -18,16 +21,28 @@ public class Arkanoid implements Screen {
     private Hud hud;
     private int playerScore;
 
+    private Camera camera;
+    private Viewport viewport;
+
+    public static final int GAME_WIDTH = 1600;
+    public static final int GAME_HEIGHT = 900;
+
     public Arkanoid(NetworkManager manager) {
         this.manager = manager;
     }
 
     @Override
     public void show() {
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT, camera);
+        viewport.apply();
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.update();
+
         playerScore = 0;
-        world = new World(this);
-        worldRenderer = new WorldRenderer(world);
-        hud = new Hud(playerScore);
+        world = new World();
+        worldRenderer = new WorldRenderer(world, camera.combined);
+        hud = new Hud(this);
     }
 
     @Override
@@ -35,13 +50,15 @@ public class Arkanoid implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //Clears the screen
 
         world.step(delta);
-        worldRenderer.render(delta);
+        worldRenderer.render();
         hud.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        viewport.update(width, height);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.update();
     }
 
     @Override
@@ -61,6 +78,7 @@ public class Arkanoid implements Screen {
 
     @Override
     public void dispose() {
+        worldRenderer.dispose();
         hud.dispose();
     }
 
@@ -69,5 +87,9 @@ public class Arkanoid implements Screen {
      */
     public void incrementPlayerScore() {
         playerScore++;
+    }
+
+    public int getPlayerScore() {
+        return playerScore;
     }
 }
