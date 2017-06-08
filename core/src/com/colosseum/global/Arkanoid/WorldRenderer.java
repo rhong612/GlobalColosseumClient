@@ -23,6 +23,7 @@ public class WorldRenderer {
 
     public void render() {
         renderPanel();
+        renderBall();
         renderBricks();
     }
 
@@ -30,6 +31,13 @@ public class WorldRenderer {
         renderer.begin(ShapeType.Filled);
         renderer.setColor(Color.YELLOW);
         renderer.rect(world.getPanel().getX(), world.getPanel().getY(), world.getPanel().getWidth(), world.getPanel().getHeight());
+        renderer.end();
+    }
+
+    private void renderBall() {
+        renderer.begin(ShapeType.Filled);
+        renderer.setColor(Color.WHITE);
+        renderer.circle(world.getBall().getX(), world.getBall().getY(), world.getBall().getRadius());
         renderer.end();
     }
 

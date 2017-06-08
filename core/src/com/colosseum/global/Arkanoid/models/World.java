@@ -23,6 +23,9 @@ public class World implements InputProcessor {
     private Panel playerPanel;
     private final int PANEL_HEIGHT = 30;
 
+    private Ball ball;
+    private final int BALL_RADIUS = 15;
+
     private float startX;
     private Viewport viewport;
 
@@ -30,6 +33,7 @@ public class World implements InputProcessor {
     public World(Viewport viewport) {
         this.viewport = viewport;
         playerPanel = new Panel(Arkanoid.GAME_WIDTH / 2, Arkanoid.GAME_HEIGHT / 10, Arkanoid.GAME_WIDTH / NUM_COLUMNS, PANEL_HEIGHT);
+        ball = new Ball(playerPanel.getX(), playerPanel.getY() + playerPanel.getHeight(), BALL_RADIUS);
         bricks = new ArrayList<>();
         final int brickWidth = Arkanoid.GAME_WIDTH / NUM_COLUMNS;
 
@@ -111,6 +115,10 @@ public class World implements InputProcessor {
 
     private Vector3 screenToWorldUnits(int screenX, int screenY) {
         return viewport.getCamera().unproject(new Vector3(screenX, screenY, 0), viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
+    }
+
+    public Ball getBall() {
+        return ball;
     }
 
 }
