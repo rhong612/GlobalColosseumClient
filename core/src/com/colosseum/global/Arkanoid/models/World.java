@@ -19,6 +19,7 @@ public class World {
 
     public World(Arkanoid arkanoid) {
         this.arkanoid = arkanoid;
+        bricks = new ArrayList<>();
         //Construct bricks
         for (int i = 0; i < NUM_COLUMNS; i++) {
             for (int j = 0; j < NUM_ROWS; j++) {
