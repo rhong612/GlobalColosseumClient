@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.colosseum.global.Arkanoid.models.Brick;
 import com.colosseum.global.Arkanoid.models.World;
 
@@ -21,7 +22,15 @@ public class WorldRenderer {
     }
 
     public void render() {
+        renderPanel();
         renderBricks();
+    }
+
+    private void renderPanel() {
+        renderer.begin(ShapeType.Filled);
+        renderer.setColor(Color.YELLOW);
+        renderer.rect(world.getPanel().getX(), world.getPanel().getY(), world.getPanel().getWidth(), world.getPanel().getHeight());
+        renderer.end();
     }
 
     private void renderBricks() {

@@ -40,9 +40,11 @@ public class Arkanoid implements Screen {
         camera.update();
 
         playerScore = 0;
-        world = new World();
+        world = new World(viewport);
         worldRenderer = new WorldRenderer(world, camera.combined);
         hud = new Hud(this);
+
+        Gdx.input.setInputProcessor(world);
     }
 
     @Override
