@@ -62,7 +62,7 @@ public class Arkanoid implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
-
+        hud.dispose();
     }
 
     @Override
