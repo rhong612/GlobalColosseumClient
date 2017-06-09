@@ -33,14 +33,14 @@ public class World implements InputProcessor {
     public World(Viewport viewport) {
         final int NUM_COLUMNS = 15;
         final int NUM_ROWS = 4;
-        final int BRICK_HEIGHT = 30;
+        final int BRICK_HEIGHT = 70;
         final int PANEL_HEIGHT = 30;
         final int BALL_RADIUS = 15;
 
 
         worldStart = false;
         this.viewport = viewport;
-        playerPanel = new Panel(Arkanoid.GAME_WIDTH / 2, Arkanoid.GAME_HEIGHT / 10, Arkanoid.GAME_WIDTH / NUM_COLUMNS * 2, PANEL_HEIGHT);
+        playerPanel = new Panel(Arkanoid.GAME_WIDTH / 2, Arkanoid.GAME_HEIGHT / 10, Arkanoid.GAME_WIDTH / NUM_COLUMNS * 5, PANEL_HEIGHT);
         ball = new Ball(playerPanel.getX(), playerPanel.getY() + playerPanel.getHeight(), BALL_RADIUS);
         bricks = new ArrayList<>();
         final int brickWidth = Arkanoid.GAME_WIDTH / NUM_COLUMNS;
@@ -59,8 +59,8 @@ public class World implements InputProcessor {
 
     public void step(float delta) {
         if (worldStart) {
+            checkCollisions(delta);
             ball.moveBall(delta);
-            checkCollisions();
         }
     }
 
@@ -139,33 +139,52 @@ public class World implements InputProcessor {
         return ball;
     }
 
-    private void checkCollisions() {
-        //Left and Right Wall
-        if (ball.getX() <= 0 || ball.getX() >= Arkanoid.GAME_WIDTH) {
+    private void checkCollisions(float delta) {
+        //Left Wall
+        if (ball.getX() <= 0) {
             ball.getVelocity().x *= -1;
+            ball.setX(0);
             hitWallSound.play();
         }
+
+        //Right Wall
+        else if (ball.getX() >= Arkanoid.GAME_WIDTH) {
+            ball.getVelocity().x *= -1;
+            ball.setX(Arkanoid.GAME_WIDTH - ball.getRadius());
+            hitWallSound.play();
+        }
+
         //Ceiling
         else if (ball.getY() >= Arkanoid.GAME_HEIGHT) {
             ball.getVelocity().y *= -1;
+            ball.setY(Arkanoid.GAME_HEIGHT - ball.getRadius());
             hitWallSound.play();
         }
+
         //Lose
         else if (ball.getY() <= 0) {
             missSound.play();
             worldStart = false;
         }
+
         //Panel
         else if (ball.getX() > playerPanel.getX() && ball.getX() < playerPanel.getX() + playerPanel.getWidth() && ball.getY() > playerPanel.getY() && ball.getY() < playerPanel.getY() + playerPanel.getHeight()) {
-            ball.getVelocity().y *= -1;
+            final float MAX_BOUNCE_ANGLE = 60; //60 Degrees
+            float distanceFromCenter = ball.getX() - (playerPanel.getX() + playerPanel.getWidth() / 2);
+            float normalizedDistanceFromCenter = distanceFromCenter / (playerPanel.getWidth() / 2);
+            float bounceAngle = normalizedDistanceFromCenter * MAX_BOUNCE_ANGLE;
+
+            ball.getVelocity().x = ball.MAGNITUDE * (float)Math.sin(bounceAngle * (Math.PI / 180f));
+            ball.getVelocity().y = ball.MAGNITUDE * (float)Math.cos(bounceAngle * (Math.PI / 180f));
+
             hitPanelSound.play();
+            ball.setY(playerPanel.getY() + playerPanel.getHeight() + ball.getRadius());
         }
         //Brick
         else {
             Iterator<Brick> brickIterator = bricks.iterator();
             while (brickIterator.hasNext()) {
                 Brick brick = brickIterator.next();
-
                 if (ball.getX() > brick.getX() && ball.getX() < brick.getX() + brick.getWidth() && ball.getY() > brick.getY() && ball.getY() < brick.getY() + brick.getHeight()) {
                     ball.getVelocity().y *= -1;
                     hitPanelSound.play();

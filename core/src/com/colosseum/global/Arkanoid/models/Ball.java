@@ -12,11 +12,13 @@ public class Ball {
     private float radius;
     private Vector2 velocity;
 
+    public static final float MAGNITUDE = 1000; //initial velocity
+
     public Ball(float x, float y, float radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        velocity = new Vector2(-500, 500); //initial velocity
+        velocity = new Vector2(-1.0f * MAGNITUDE, MAGNITUDE);
     }
 
     public float getX() {
@@ -40,4 +42,11 @@ public class Ball {
         y += velocity.y * delta;
     }
 
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
 }
