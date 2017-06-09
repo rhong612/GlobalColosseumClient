@@ -29,6 +29,7 @@ public class Arkanoid implements Screen {
 
     public Arkanoid(NetworkManager manager) {
         this.manager = manager;
+        manager.connect("http://127.0.1.0");
     }
 
     @Override
