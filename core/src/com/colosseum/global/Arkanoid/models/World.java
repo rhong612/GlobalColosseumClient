@@ -59,8 +59,8 @@ public class World implements InputProcessor {
 
     public void step(float delta) {
         if (worldStart) {
-            checkCollisions(delta);
             ball.moveBall(delta);
+            checkCollisions(delta);
         }
     }
 
@@ -183,14 +183,39 @@ public class World implements InputProcessor {
         //Brick
         else {
             Iterator<Brick> brickIterator = bricks.iterator();
-            while (brickIterator.hasNext()) {
+            boolean collisionFound = false;
+            while (brickIterator.hasNext() && !collisionFound) {
                 Brick brick = brickIterator.next();
                 if (ball.getX() > brick.getX() && ball.getX() < brick.getX() + brick.getWidth() && ball.getY() > brick.getY() && ball.getY() < brick.getY() + brick.getHeight()) {
-                    ball.getVelocity().y *= -1;
+
+                    //Bottom
+                    if (ball.getVelocity().y > 0 && ball.getY() - ball.getRadius()< brick.getY()) {
+                        ball.getVelocity().y *= -1;
+                    }
+                    //Right
+                    else if (ball.getVelocity().x < 0 && ball.getX() + ball.getRadius() > brick.getX() + brick.getWidth()) {
+                        ball.getVelocity().x *= -1;
+                    }
+                    //Left
+                    else if (ball.getVelocity().x > 0 && ball.getX() - ball.getRadius() * 2 < brick.getX()) {
+                        ball.getVelocity().x *= -1;
+                    }
+                    //Top
+                    else {
+                        ball.getVelocity().y *= -1;
+                    }
+
                     hitPanelSound.play();
                     brickIterator.remove();
+                    collisionFound = true;
                 }
             }
         }
+    }
+
+    public void dispose() {
+        hitPanelSound.dispose();
+        hitWallSound.dispose();
+        missSound.dispose();
     }
 }

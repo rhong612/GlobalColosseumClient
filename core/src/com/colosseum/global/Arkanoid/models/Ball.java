@@ -18,7 +18,7 @@ public class Ball {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        velocity = new Vector2(-1.0f * MAGNITUDE, MAGNITUDE);
+        velocity = new Vector2(-1.0f * MAGNITUDE / 2, MAGNITUDE / 2);
     }
 
     public float getX() {

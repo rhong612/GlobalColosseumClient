@@ -82,6 +82,7 @@ public class Arkanoid implements Screen {
     @Override
     public void dispose() {
         worldRenderer.dispose();
+        world.dispose();
         hud.dispose();
     }
 
