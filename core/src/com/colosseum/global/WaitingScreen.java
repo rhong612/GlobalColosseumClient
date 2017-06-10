@@ -11,9 +11,9 @@ public class WaitingScreen implements Screen {
 
     private NetworkManager manager;
 
-    public WaitingScreen(NetworkManager manager) {
+    public WaitingScreen(String ipAddress, NetworkManager manager) {
         this.manager = manager;
-        manager.connect("http://127.0.1.0");
+        this.manager.connect(ipAddress);
     }
 
     @Override

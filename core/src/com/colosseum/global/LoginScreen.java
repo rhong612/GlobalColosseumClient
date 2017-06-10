@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
  *
@@ -20,6 +23,13 @@ public class LoginScreen implements Screen {
     private Stage stage;
     private TextureAtlas atlas;
     private Skin skin;
+    private GlobalColosseumController controller;
+    private NetworkManager manager;
+
+    public LoginScreen(GlobalColosseumController controller, NetworkManager networkManager) {
+        this.controller = controller;
+        manager = networkManager;
+    }
 
     @Override
     public void show() {
@@ -33,14 +43,23 @@ public class LoginScreen implements Screen {
 
 
         Label serverLabel = new Label("Server IP Address:", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
-        TextField textField = new TextField("", skin);
+        final TextField textField = new TextField("", skin);
+        TextButton startButton = new TextButton("Start Game", skin);
+        startButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.setScreen(new WaitingScreen(textField.getText(), manager));
+            }
+        });;
 
         mainTable.add(serverLabel);
         mainTable.add(textField);
         mainTable.row();
+        mainTable.add(startButton);
 
 
         stage.addActor(mainTable);
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
