@@ -11,8 +11,8 @@ public class GlobalColosseumController extends Game {
 	@Override
 	public void create () {
 		networkManager = new NetworkManager();
-		//setScreen(new Arkanoid(networkManager)); //TODO: Remove. This is for testing purposes
-		setScreen(new LoginScreen(this, networkManager));
+		//setScreen(new Arkanoid(this)); //TODO: Remove. This is for testing purposes
+		setScreen(new LoginScreen(this));
 	}
 
 	@Override
@@ -26,5 +26,9 @@ public class GlobalColosseumController extends Game {
 	@Override
 	public void dispose () {
 		getScreen().dispose();
+	}
+
+	public NetworkManager getNetworkManager() {
+		return networkManager;
 	}
 }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.colosseum.global.Arkanoid.models.World;
+import com.colosseum.global.GlobalColosseumController;
 import com.colosseum.global.NetworkManager;
 
 /**
@@ -15,7 +16,7 @@ import com.colosseum.global.NetworkManager;
  */
 public class Arkanoid implements Screen {
 
-    private NetworkManager manager;
+    private GlobalColosseumController controller;
     private World world;
     private WorldRenderer worldRenderer;
     private Hud hud;
@@ -24,12 +25,12 @@ public class Arkanoid implements Screen {
     private Camera camera;
     private Viewport viewport;
 
-    public static final int GAME_WIDTH = 1600;
-    public static final int GAME_HEIGHT = 900;
+    protected static final int GAME_WIDTH = 1600;
+    protected static final int GAME_HEIGHT = 900;
 
-    public Arkanoid(NetworkManager manager) {
-        this.manager = manager;
-        manager.connect("http://127.0.1.0");
+    public Arkanoid(GlobalColosseumController controller) {
+        this.controller = controller;
+        controller.getNetworkManager().connect("http://127.0.1.0");
     }
 
     @Override

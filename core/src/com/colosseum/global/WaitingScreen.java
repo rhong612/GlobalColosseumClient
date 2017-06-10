@@ -9,11 +9,8 @@ import com.badlogic.gdx.graphics.GL20;
  */
 public class WaitingScreen implements Screen {
 
-    private NetworkManager manager;
-
-    public WaitingScreen(String ipAddress, NetworkManager manager) {
-        this.manager = manager;
-        this.manager.connect(ipAddress);
+    public WaitingScreen(GlobalColosseumController controller, String playerName, String ipAddress) {
+        controller.getNetworkManager().connect(ipAddress);
     }
 
     @Override
