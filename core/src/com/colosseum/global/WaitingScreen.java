@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 public class WaitingScreen implements Screen {
 
     public WaitingScreen(GlobalColosseumController controller, String playerName, String ipAddress) {
-        controller.getNetworkManager().connect(ipAddress);
+        controller.getNetworkManager().connect(ipAddress, playerName);
     }
 
     @Override
