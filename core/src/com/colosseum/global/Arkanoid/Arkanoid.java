@@ -25,12 +25,11 @@ public class Arkanoid implements Screen {
     private Camera camera;
     private Viewport viewport;
 
-    protected static final int GAME_WIDTH = 1600;
-    protected static final int GAME_HEIGHT = 900;
+    public static final int GAME_WIDTH = 1600;
+    public static final int GAME_HEIGHT = 900;
 
     public Arkanoid(GlobalColosseumController controller) {
         this.controller = controller;
-        controller.getNetworkManager().connect("http://127.0.1.0");
     }
 
     @Override
