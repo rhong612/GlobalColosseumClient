@@ -39,7 +39,7 @@ public class World implements InputProcessor {
     private final int NUM_ROWS = 4;
     private final int BRICK_HEIGHT = 70;
     private final int BRICK_WIDTH = Arkanoid.GAME_WIDTH / NUM_COLUMNS;
-    private final int PANEL_WIDTH = BRICK_WIDTH * 2;
+    private final int PANEL_WIDTH = BRICK_WIDTH * 7;
 
     public World(Viewport viewport) {
         bricks = new ArrayList<>();
@@ -208,9 +208,12 @@ public class World implements InputProcessor {
                     }
 
                     hitPanelSound.play();
-                    brickIterator.remove();
+                    brick.hit();
+                    if (brick.getDurability() == 0) {
+                        brickIterator.remove();
+                        activeHitCount++;
+                    }
                     collisionFound = true;
-                    activeHitCount++;
                 }
             }
         }
@@ -231,7 +234,7 @@ public class World implements InputProcessor {
 
         //Add top row
         for (int i = 0; i < NUM_COLUMNS; i++) {
-            bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT));
+            bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
         }
     }
 
@@ -240,15 +243,28 @@ public class World implements InputProcessor {
         if (level == 0) {
             for (int i = 0; i < NUM_COLUMNS; i++) {
                 for (int j = 1; j <= NUM_ROWS; j++) {
-                    bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT));
+                    bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
                 }
             }
             addRowLimit = Integer.MAX_VALUE;
         }
         else if (level == 1) {
+            //Add top row
+            for (int i = 0; i < NUM_COLUMNS; i++) {
+                bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 2));
+            }
+            //Add the rest
+            for (int i = 0; i < NUM_COLUMNS; i++) {
+                for (int j = 2; j <= NUM_ROWS; j++) {
+                    bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
+                }
+            }
+            addRowLimit = Integer.MAX_VALUE;
+        }
+        else if (level == 2) {
             for (int i = 0; i < NUM_COLUMNS; i++) {
                 for (int j = 1; j <= NUM_ROWS; j++) {
-                    bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT));
+                    bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
                 }
             }
             addRowLimit = 10;

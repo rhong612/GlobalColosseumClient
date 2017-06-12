@@ -42,8 +42,16 @@ public class WorldRenderer {
 
     private void renderBricks() {
         renderer.begin(ShapeType.Filled);
-        renderer.setColor(Color.WHITE);
         for (Brick brick : world.getBricks()) {
+            if (brick.getDurability() == 1) {
+                renderer.setColor(Color.WHITE);
+            }
+            else if (brick.getDurability() == 2) {
+                renderer.setColor(Color.BLUE);
+            }
+            else {
+                renderer.setColor(Color.GRAY);
+            }
             renderer.rect(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight());
         }
         renderer.end();
