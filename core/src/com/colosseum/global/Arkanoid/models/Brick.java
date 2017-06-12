@@ -32,4 +32,8 @@ public class Brick {
     public int getHeight() {
         return height;
     }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 }

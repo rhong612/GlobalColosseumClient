@@ -16,7 +16,6 @@ import java.util.Iterator;
 
 public class World implements InputProcessor {
     private ArrayList<Brick> bricks;
-
     private Panel playerPanel;
 
     private Ball ball;
@@ -26,31 +25,30 @@ public class World implements InputProcessor {
 
     private boolean worldStart;
 
+    private int activeHitCount; //Incremented whenever the ball destroys a brick
+    private int addRowLimit; // If the activeHitCount reaches this value, a new row is added. Set to Integer.MAX_VALUE if unneeded
+
     private Sound hitPanelSound;
     private Sound hitWallSound;
     private Sound missSound;
 
+
+    private final int PANEL_HEIGHT = 30;
+    private final int BALL_RADIUS = 15;
+    private final int NUM_COLUMNS = 15;
+    private final int NUM_ROWS = 4;
+    private final int BRICK_HEIGHT = 70;
+    private final int BRICK_WIDTH = Arkanoid.GAME_WIDTH / NUM_COLUMNS;
+    private final int PANEL_WIDTH = BRICK_WIDTH * 2;
+
     public World(Viewport viewport) {
-        final int NUM_COLUMNS = 15;
-        final int NUM_ROWS = 4;
-        final int BRICK_HEIGHT = 70;
-        final int PANEL_HEIGHT = 30;
-        final int BALL_RADIUS = 15;
-
-
+        bricks = new ArrayList<>();
+        initializeLevel(1);
         worldStart = false;
         this.viewport = viewport;
-        playerPanel = new Panel(Arkanoid.GAME_WIDTH / 2, Arkanoid.GAME_HEIGHT / 10, Arkanoid.GAME_WIDTH / NUM_COLUMNS * 5, PANEL_HEIGHT);
+        playerPanel = new Panel(Arkanoid.GAME_WIDTH / 2, Arkanoid.GAME_HEIGHT / 10, PANEL_WIDTH, PANEL_HEIGHT);
         ball = new Ball(playerPanel.getX(), playerPanel.getY() + playerPanel.getHeight(), BALL_RADIUS);
-        bricks = new ArrayList<>();
-        final int brickWidth = Arkanoid.GAME_WIDTH / NUM_COLUMNS;
 
-        //Construct bricks
-        for (int i = 0; i < NUM_COLUMNS; i++) {
-            for (int j = 1; j <= NUM_ROWS; j++) {
-                bricks.add(new Brick(i * brickWidth, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, brickWidth, BRICK_HEIGHT));
-            }
-        }
 
         hitPanelSound = Gdx.audio.newSound(Gdx.files.internal("pong_panel.wav"));
         hitWallSound = Gdx.audio.newSound(Gdx.files.internal("pong_wall.wav"));
@@ -61,6 +59,10 @@ public class World implements InputProcessor {
         if (worldStart) {
             ball.moveBall(delta);
             checkCollisions(delta);
+            if (activeHitCount >= addRowLimit) {
+                activeHitCount = 0;
+                addRowToTop();
+            }
         }
     }
 
@@ -208,6 +210,7 @@ public class World implements InputProcessor {
                     hitPanelSound.play();
                     brickIterator.remove();
                     collisionFound = true;
+                    activeHitCount++;
                 }
             }
         }
@@ -217,5 +220,38 @@ public class World implements InputProcessor {
         hitPanelSound.dispose();
         hitWallSound.dispose();
         missSound.dispose();
+    }
+
+
+    private void addRowToTop() {
+        //Move all bricks down 1 row
+        for (Brick brick : bricks) {
+            brick.setY(brick.getY() - BRICK_HEIGHT);
+        }
+
+        //Add top row
+        for (int i = 0; i < NUM_COLUMNS; i++) {
+            bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT));
+        }
+    }
+
+    private void initializeLevel(int level) {
+        bricks.clear();
+        if (level == 0) {
+            for (int i = 0; i < NUM_COLUMNS; i++) {
+                for (int j = 1; j <= NUM_ROWS; j++) {
+                    bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT));
+                }
+            }
+            addRowLimit = Integer.MAX_VALUE;
+        }
+        else if (level == 1) {
+            for (int i = 0; i < NUM_COLUMNS; i++) {
+                for (int j = 1; j <= NUM_ROWS; j++) {
+                    bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT));
+                }
+            }
+            addRowLimit = 10;
+        }
     }
 }
