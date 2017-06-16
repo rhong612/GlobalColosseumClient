@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.colosseum.global.Arkanoid.models.World;
-import com.colosseum.global.GlobalColosseumController;
-import com.colosseum.global.NetworkManager;
+import com.globalcolosseum.GlobalColosseumController;
+import com.globalcolosseum.NetworkManager;
 
 /**
  *

@@ -3,7 +3,7 @@ package com.colosseum.global.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.colosseum.global.GlobalColosseumController;
+import com.globalcolosseum.GlobalColosseumController;
 
 public class HtmlLauncher extends GwtApplication {
 

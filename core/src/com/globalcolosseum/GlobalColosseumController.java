@@ -1,4 +1,4 @@
-package com.colosseum.global;
+package com.globalcolosseum;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
@@ -11,8 +11,8 @@ public class GlobalColosseumController extends Game {
 	@Override
 	public void create () {
 		networkManager = new NetworkManager();
-		setScreen(new Arkanoid(this)); //TODO: Remove. This is for testing purposes
-		//setScreen(new LoginScreen(this));
+		//setScreen(new Arkanoid(this)); //TODO: Remove. This is for testing purposes
+		setScreen(new LoginScreen(this));
 	}
 
 	@Override

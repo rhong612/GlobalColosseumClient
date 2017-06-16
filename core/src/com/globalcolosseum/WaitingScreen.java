@@ -1,4 +1,4 @@
-package com.colosseum.global;
+package com.globalcolosseum;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -10,7 +10,8 @@ import com.badlogic.gdx.graphics.GL20;
 public class WaitingScreen implements Screen {
 
     public WaitingScreen(GlobalColosseumController controller, String playerName, String ipAddress) {
-        controller.getNetworkManager().connect(ipAddress, playerName);
+    	String password = "password";
+        controller.getNetworkManager().connect(ipAddress, playerName, password);
     }
 
     @Override
