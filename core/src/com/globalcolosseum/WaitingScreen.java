@@ -11,7 +11,8 @@ public class WaitingScreen implements Screen {
 
     public WaitingScreen(GlobalColosseumController controller, String playerName, String ipAddress) {
     	String password = "password";
-        controller.getNetworkManager().connect(ipAddress, playerName, password);
+    	String screenName = "Test";
+        controller.getNetworkManager().connect(ipAddress, screenName, playerName, password);
     }
 
     @Override
