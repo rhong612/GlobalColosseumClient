@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  *
  */
-public class LoginScreen implements Screen {
+public class GameSelectionScreen implements Screen {
 
     private Stage stage;
     private TextureAtlas atlas;
@@ -33,7 +33,7 @@ public class LoginScreen implements Screen {
     private static final int VIRTUAL_SCREEN_WIDTH = 1600;
     private static final int VIRTUAL_SCREEN_HEIGHT = 900;
 
-    public LoginScreen(GlobalColosseumController controller) {
+    public GameSelectionScreen(GlobalColosseumController controller) {
         this.controller = controller;
     }
 
@@ -49,37 +49,6 @@ public class LoginScreen implements Screen {
         skin = new Skin(Gdx.files.internal("textures/comic-ui.json"), atlas);
 
         stage = new Stage();
-
-        Table mainTable = new Table();
-        mainTable.setFillParent(true);
-
-
-        Label serverLabel = new Label("Server IP Address:", new Label.LabelStyle(skin.getFont("button"), Color.WHITE));
-        final TextField serverTextField = new TextField("", skin);
-
-        Label playerLabel = new Label("Player Name:", new Label.LabelStyle(skin.getFont("button"), Color.WHITE));
-        final TextField playerTextField = new TextField("", skin);
-
-        TextButton startButton = new TextButton("Start Game", skin);
-        startButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                //controller.setScreen(new WaitingScreen(controller, playerTextField.getText(), serverTextField.getText()));
-
-                //TODO: Remove
-                controller.setScreen(new DiceRollScreen(controller));
-            }
-        });
-
-        mainTable.add(serverLabel);
-        mainTable.add(serverTextField);
-        mainTable.row();
-        mainTable.add(playerLabel);
-        mainTable.add(playerTextField);
-        mainTable.row();
-        mainTable.add(startButton).colspan(2);
-
-        stage.addActor(mainTable);
         Gdx.input.setInputProcessor(stage);
     }
 
