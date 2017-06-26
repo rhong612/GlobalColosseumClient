@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Queue;
  */
 
 public class NetworkManager {
-	protected static Player player;
+	protected static Profile profile;
 	private static String address;
 	private Queue<JSONRPCRequest> incomingMessages;
 
@@ -37,7 +37,7 @@ public class NetworkManager {
 				Json json = new Json();
 				JSONRPCResponse message = json.fromJson(JSONRPCResponse.class, result);
 				NetworkManager.address = address;
-				NetworkManager.player = (Player)message.getResult();
+				NetworkManager.profile = (Profile)message.getResult();
 			}
 			
 			@Override
@@ -56,7 +56,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("logout", new String[] { player.getUsername() }, player.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("logout", new String[] { profile.getUsername() }, profile.getPlayerID());
 		request.setContent(json.toJson(message));
 		Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
 			@Override
@@ -81,7 +81,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("poll", null, player.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("poll", null, profile.getPlayerID());
 		String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
@@ -108,7 +108,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("post", new String[] { "Roll", String.valueOf(roll) }, player.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("post", new String[] { "Roll", String.valueOf(roll) }, profile.getPlayerID());
 		String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
@@ -135,7 +135,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("post", new String[] { "GameID", String.valueOf(gameID) }, player.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("post", new String[] { "GameID", String.valueOf(gameID) }, profile.getPlayerID());
 		String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
@@ -162,7 +162,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("post", new String[] { "Score", String.valueOf(score) }, player.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("post", new String[] { "Score", String.valueOf(score) }, profile.getPlayerID());
 		String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
