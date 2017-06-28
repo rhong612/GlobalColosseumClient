@@ -32,7 +32,7 @@ public class NetworkManager {
 		Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
 			@Override
 			public void handleHttpResponse(HttpResponse httpResponse) {
-				String result = httpResponse.getResultAsString();
+				String result = httpResponse.getResultAsString().replace("com.MiniGameSDK", "com.globalcolosseum");
 				System.out.println("Received: " + result);
 				Json json = new Json();
 				JSONRPCResponse message = json.fromJson(JSONRPCResponse.class, result);
@@ -90,6 +90,9 @@ public class NetworkManager {
 			public void handleHttpResponse(HttpResponse httpResponse) {
 				String result = httpResponse.getResultAsString();
 				System.out.println("Received: " + result);
+				if (result.equals("Roll")) {
+					// Send Roll from roll screen
+				}
 			}
 			
 			@Override
@@ -108,7 +111,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("post", new String[] { "Roll", String.valueOf(roll) }, profile.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("postRoll", new String[] { String.valueOf(roll) }, profile.getPlayerID());
 		String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
@@ -135,7 +138,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("post", new String[] { "GameID", String.valueOf(gameID) }, profile.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("postGameID", new String[] { String.valueOf(gameID) }, profile.getPlayerID());
 		String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
@@ -162,7 +165,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("post", new String[] { "Score", String.valueOf(score) }, profile.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("postScore", new String[] { String.valueOf(score) }, profile.getPlayerID());
 		String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
