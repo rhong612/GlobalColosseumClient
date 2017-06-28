@@ -134,11 +134,11 @@ public class NetworkManager {
 		});
 	}
 	
-	public void sendGameSelection(int gameID) {
+	public void sendControl(String button) {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("postGameID", new String[] { String.valueOf(gameID) }, profile.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("postControl", new String[] { button }, profile.getPlayerID());
 		String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
