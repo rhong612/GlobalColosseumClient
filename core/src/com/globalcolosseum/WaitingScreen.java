@@ -9,7 +9,13 @@ import com.badlogic.gdx.graphics.GL20;
  */
 public class WaitingScreen implements Screen {
 
+    private GlobalColosseumController controller;
+    private float timeElapsed;
+    private static final float SECONDS_PER_POLL = 2;
+
     public WaitingScreen(GlobalColosseumController controller, String playerName, String ipAddress) {
+        this.controller = controller;
+        timeElapsed = 0;
     	String password = "password";
     	String screenName = "Test";
         controller.getNetworkManager().connect(ipAddress, screenName, playerName, password);
@@ -22,6 +28,11 @@ public class WaitingScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //Clears the screen
+        timeElapsed += delta;
+        if (timeElapsed > SECONDS_PER_POLL) {
+            timeElapsed = 0;
+            controller.getNetworkManager().poll();
+        }
     }
 
     @Override

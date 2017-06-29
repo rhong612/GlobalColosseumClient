@@ -64,10 +64,10 @@ public class LoginScreen implements Screen {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //controller.setScreen(new WaitingScreen(controller, playerTextField.getText(), serverTextField.getText()));
+                controller.setScreen(new WaitingScreen(controller, playerTextField.getText(), serverTextField.getText()));
 
                 //TODO: Remove
-                controller.setScreen(new DiceRollScreen(controller));
+                //controller.setScreen(new DiceRollScreen(controller));
             }
         });
 
