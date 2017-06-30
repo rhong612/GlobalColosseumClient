@@ -6,12 +6,6 @@ import com.badlogic.gdx.Net.HttpRequest;
 import com.badlogic.gdx.Net.HttpResponse;
 import com.badlogic.gdx.Net.HttpResponseListener;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.Queue;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 
 /**
  *
@@ -19,13 +13,12 @@ import java.io.ObjectInputStream;
 
 public class NetworkManager {
 	protected static Profile profile;
+	private final int POLL_TIMEOUT = 1000;
 	private static String address;
-	private Queue<JSONRPCRequest> incomingMessages;
 	private GlobalColosseumController controller;
 
 	public NetworkManager(GlobalColosseumController controller) {
 		this.controller = controller;
-		incomingMessages = new Queue<JSONRPCRequest>();
 	}
 	
 	public void connect(final String address, String screenname, String username, String password) {
@@ -87,6 +80,7 @@ public class NetworkManager {
 	public void poll() {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
+		request.setTimeOut(POLL_TIMEOUT);
 		Json json = new Json();
 		JSONRPCRequest message = new JSONRPCRequest("poll", null, profile.getPlayerID());
 		String content = json.toJson(message);
@@ -97,16 +91,18 @@ public class NetworkManager {
 			public void handleHttpResponse(HttpResponse httpResponse) {
 				String result = httpResponse.getResultAsString();
 				System.out.println("Received: " + result);
-				Json json = new Json();
-				JSONRPCResponse message = json.fromJson(JSONRPCResponse.class, result);
-				//Switch to roll screen
-				if (message.getResult().equals("Roll")) {
-					Gdx.app.postRunnable(new Runnable() {
-						@Override
-						public void run() {
-							controller.setScreen(new DiceRollScreen(controller));
-						}
-					});
+				if (!result.equals("") && !result.equals("{}")) {
+					Json json = new Json();
+					JSONRPCResponse message = json.fromJson(JSONRPCResponse.class, result);
+					//Switch to roll screen
+					if (message.getResult().equals("Roll")) {
+						Gdx.app.postRunnable(new Runnable() {
+							@Override
+							public void run() {
+								controller.setScreen(new DiceRollScreen(controller));
+							}
+						});
+					}
 				}
 			}
 			
