@@ -65,9 +65,6 @@ public class LoginScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 controller.setScreen(new WaitingScreen(controller, playerTextField.getText(), serverTextField.getText()));
-
-                //TODO: Remove
-                //controller.setScreen(new DiceRollScreen(controller));
             }
         });
 
@@ -86,7 +83,6 @@ public class LoginScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //Clears the screen
-
         stage.act();
         stage.draw();
     }

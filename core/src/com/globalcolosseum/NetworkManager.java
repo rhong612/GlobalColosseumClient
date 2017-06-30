@@ -8,6 +8,11 @@ import com.badlogic.gdx.Net.HttpResponseListener;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Queue;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+
 /**
  *
  */
@@ -16,8 +21,10 @@ public class NetworkManager {
 	protected static Profile profile;
 	private static String address;
 	private Queue<JSONRPCRequest> incomingMessages;
+	private GlobalColosseumController controller;
 
-	public NetworkManager() {
+	public NetworkManager(GlobalColosseumController controller) {
+		this.controller = controller;
 		incomingMessages = new Queue<JSONRPCRequest>();
 	}
 	
@@ -90,8 +97,16 @@ public class NetworkManager {
 			public void handleHttpResponse(HttpResponse httpResponse) {
 				String result = httpResponse.getResultAsString();
 				System.out.println("Received: " + result);
-				if (result.equals("Roll")) {
-					// Send Roll from roll screen
+				Json json = new Json();
+				JSONRPCResponse message = json.fromJson(JSONRPCResponse.class, result);
+				//Switch to roll screen
+				if (message.getResult().equals("Roll")) {
+					Gdx.app.postRunnable(new Runnable() {
+						@Override
+						public void run() {
+							controller.setScreen(new DiceRollScreen(controller));
+						}
+					});
 				}
 			}
 			

@@ -10,8 +10,7 @@ public class GlobalColosseumController extends Game {
 
 	@Override
 	public void create () {
-		networkManager = new NetworkManager();
-		//setScreen(new DiceRollScreen(this)); //TODO: Remove. This is for testing purposes
+		networkManager = new NetworkManager(this);
 		setScreen(new LoginScreen(this));
 	}
 
