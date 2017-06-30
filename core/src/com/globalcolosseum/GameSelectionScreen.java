@@ -33,6 +33,12 @@ public class GameSelectionScreen implements Screen {
     private static final int VIRTUAL_SCREEN_WIDTH = 1600;
     private static final int VIRTUAL_SCREEN_HEIGHT = 900;
 
+    private static final String UP_CONTROL_STRING = "up";
+    private static final String DOWN_CONTROL_STRING = "down";
+    private static final String LEFT_CONTROL_STRING = "left";
+    private static final String RIGHT_CONTROL_STRING = "right";
+    private static final String ENTER_CONTROL_STRING = "ok";
+
     public GameSelectionScreen(GlobalColosseumController controller) {
         this.controller = controller;
     }
@@ -48,7 +54,57 @@ public class GameSelectionScreen implements Screen {
         atlas = new TextureAtlas("textures/comic-ui.atlas");
         skin = new Skin(Gdx.files.internal("textures/comic-ui.json"), atlas);
 
+        Table table = new Table();
+        table.setFillParent(true);
+
+        //TODO: Replace with actual images
+        TextButton upButton = new TextButton("UP", skin);
+        upButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.getNetworkManager().sendControl(UP_CONTROL_STRING);
+            }
+        });
+        TextButton downButton = new TextButton("DOWN", skin);
+        downButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.getNetworkManager().sendControl(DOWN_CONTROL_STRING);
+            }
+        });
+        TextButton leftButton = new TextButton("LEFT", skin);
+        leftButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.getNetworkManager().sendControl(LEFT_CONTROL_STRING);
+            }
+        });
+        TextButton rightButton = new TextButton("RIGHT", skin);
+        rightButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.getNetworkManager().sendControl(RIGHT_CONTROL_STRING);
+            }
+        });
+        TextButton enterButton = new TextButton("ENTER", skin);
+        enterButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.getNetworkManager().sendControl(ENTER_CONTROL_STRING);
+            }
+        });
+        table.add(upButton);
+        table.row();
+        table.add(downButton);
+        table.row();
+        table.add(leftButton);
+        table.row();
+        table.add(rightButton);
+        table.row();
+        table.add(enterButton);
+
         stage = new Stage();
+        stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
     }
 

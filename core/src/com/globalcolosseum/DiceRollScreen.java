@@ -79,6 +79,7 @@ public class DiceRollScreen implements Screen {
             public boolean touchDown (int x, int y, int pointer, int button) {
                 touched = true;
                 controller.getNetworkManager().sendRoll(currentDiceNum);
+                controller.setScreen(new GameSelectionScreen(controller));
                 return true;
             }
         });
