@@ -33,6 +33,8 @@ public class LoginScreen implements Screen {
     private static final int VIRTUAL_SCREEN_WIDTH = 1600;
     private static final int VIRTUAL_SCREEN_HEIGHT = 900;
 
+    private boolean testing = true; //Toggle to false when done testing
+
     public LoginScreen(GlobalColosseumController controller) {
         this.controller = controller;
     }
@@ -68,6 +70,7 @@ public class LoginScreen implements Screen {
             }
         });
 
+
         mainTable.add(serverLabel);
         mainTable.add(serverTextField);
         mainTable.row();
@@ -75,6 +78,29 @@ public class LoginScreen implements Screen {
         mainTable.add(playerTextField);
         mainTable.row();
         mainTable.add(startButton).colspan(2);
+
+
+        if (testing) {
+            TextButton testButtonA = new TextButton("QUICK TEST A", skin);
+            testButtonA.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    controller.setScreen(new WaitingScreen(controller, "TEST SCREEN NAME 1", "127.0.0.1"));
+                }
+            });
+
+            TextButton testButtonB = new TextButton("QUICK TEST B", skin);
+            testButtonB.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    controller.setScreen(new WaitingScreen(controller, "TEST SCREEN NAME 2", "127.0.0.1"));
+                }
+            });
+
+            mainTable.row();
+            mainTable.add(testButtonA);
+            mainTable.add(testButtonB);
+        }
 
         stage.addActor(mainTable);
         Gdx.input.setInputProcessor(stage);
