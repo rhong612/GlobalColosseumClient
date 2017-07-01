@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.colosseum.global.Arkanoid.models.World;
 import com.globalcolosseum.GlobalColosseumController;
 import com.globalcolosseum.NetworkManager;
+import com.globalcolosseum.WaitingScreen;
 
 /**
  *
@@ -20,7 +21,6 @@ public class Arkanoid implements Screen {
     private World world;
     private WorldRenderer worldRenderer;
     private Hud hud;
-    private int playerScore;
 
     private Camera camera;
     private Viewport viewport;
@@ -40,7 +40,6 @@ public class Arkanoid implements Screen {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
 
-        playerScore = 0;
         world = new World(viewport);
         worldRenderer = new WorldRenderer(world, camera.combined);
         hud = new Hud(this);
@@ -55,6 +54,11 @@ public class Arkanoid implements Screen {
         world.step(delta);
         worldRenderer.render();
         hud.draw();
+
+        if (world.isGameOver()) {
+            controller.getNetworkManager().sendScore(world.getScore());
+            controller.setScreen(new WaitingScreen(controller));
+        }
     }
 
     @Override
@@ -86,14 +90,7 @@ public class Arkanoid implements Screen {
         hud.dispose();
     }
 
-    /**
-     * Increases player score by 1
-     */
-    public void incrementPlayerScore() {
-        playerScore++;
-    }
-
     public int getPlayerScore() {
-        return playerScore;
+        return world.getScore();
     }
 }

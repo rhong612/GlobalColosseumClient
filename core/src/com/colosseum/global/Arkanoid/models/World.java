@@ -19,11 +19,13 @@ public class World implements InputProcessor {
     private Panel playerPanel;
 
     private Ball ball;
+    private int score;
 
     private float startX;
     private Viewport viewport;
 
     private boolean worldStart;
+    private boolean gameOver;
 
     private int activeHitCount; //Incremented whenever the ball destroys a brick
     private int addRowLimit; // If the activeHitCount reaches this value, a new row is added. Set to Integer.MAX_VALUE if unneeded
@@ -42,6 +44,8 @@ public class World implements InputProcessor {
     private final int PANEL_WIDTH = BRICK_WIDTH * 7;
 
     public World(Viewport viewport) {
+        score = 0;
+        gameOver = false;
         bricks = new ArrayList<>();
         initializeLevel(1);
         worldStart = false;
@@ -141,6 +145,10 @@ public class World implements InputProcessor {
         return ball;
     }
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
     private void checkCollisions(float delta) {
         //Left Wall
         if (ball.getX() <= 0) {
@@ -167,6 +175,7 @@ public class World implements InputProcessor {
         else if (ball.getY() <= 0) {
             missSound.play();
             worldStart = false;
+            gameOver = true;
         }
 
         //Panel
@@ -214,6 +223,7 @@ public class World implements InputProcessor {
                         activeHitCount++;
                     }
                     collisionFound = true;
+                    score++;
                 }
             }
         }
@@ -269,5 +279,9 @@ public class World implements InputProcessor {
             }
             addRowLimit = 10;
         }
+    }
+
+    public int getScore() {
+        return score;
     }
 }
