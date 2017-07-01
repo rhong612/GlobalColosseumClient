@@ -8,6 +8,10 @@ import com.colosseum.global.Arkanoid.Arkanoid;
 public class GlobalColosseumController extends Game {
 
 	private NetworkManager networkManager;
+	private String screenName;
+	private String ipAddress;
+	private String userName;
+	private String password;
 
 	@Override
 	public void create () {
@@ -36,5 +40,28 @@ public class GlobalColosseumController extends Game {
 
 	public NetworkManager getNetworkManager() {
 		return networkManager;
+	}
+
+	public void setLoginInformation(String screenName, String ipAddress, String userName, String password) {
+		this.screenName = screenName;
+		this.ipAddress = ipAddress;
+		this.userName = userName;
+		this.password = password;
+	}
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public String getScreenName() {
+		return screenName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 }

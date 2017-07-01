@@ -59,14 +59,21 @@ public class LoginScreen implements Screen {
         Label serverLabel = new Label("Server IP Address:", new Label.LabelStyle(skin.getFont("button"), Color.WHITE));
         final TextField serverTextField = new TextField("", skin);
 
-        Label playerLabel = new Label("Player Name:", new Label.LabelStyle(skin.getFont("button"), Color.WHITE));
+        Label playerLabel = new Label("Screen Name:", new Label.LabelStyle(skin.getFont("button"), Color.WHITE));
         final TextField playerTextField = new TextField("", skin);
+
+        Label usernameLabel = new Label("Username:", new Label.LabelStyle(skin.getFont("button"), Color.WHITE));
+        final TextField usernameTextField = new TextField("", skin);
+
+        Label passwordLabel = new Label("Password:", new Label.LabelStyle(skin.getFont("button"), Color.WHITE));
+        final TextField passwordTextField = new TextField("", skin);
 
         TextButton startButton = new TextButton("Start Game", skin);
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                controller.setScreen(new WaitingScreen(controller, playerTextField.getText(), serverTextField.getText()));
+                controller.setLoginInformation(playerTextField.getText(), serverTextField.getText(), usernameTextField.getText(), passwordTextField.getText());
+                controller.setScreen(new WaitingScreen(controller));
             }
         });
 
@@ -77,6 +84,12 @@ public class LoginScreen implements Screen {
         mainTable.add(playerLabel);
         mainTable.add(playerTextField);
         mainTable.row();
+        mainTable.add(usernameLabel);
+        mainTable.add(usernameTextField);
+        mainTable.row();
+        mainTable.add(passwordLabel);
+        mainTable.add(passwordTextField);
+        mainTable.row();
         mainTable.add(startButton).colspan(2);
 
 
@@ -85,7 +98,8 @@ public class LoginScreen implements Screen {
             testButtonA.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    controller.setScreen(new WaitingScreen(controller, "TEST SCREEN NAME 1", "127.0.0.1"));
+                    controller.setLoginInformation("TEST SCREEN NAME 1", "127.0.0.1", "USERNAME1", "RANDOMPW");
+                    controller.setScreen(new WaitingScreen(controller));
                 }
             });
 
@@ -93,7 +107,8 @@ public class LoginScreen implements Screen {
             testButtonB.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    controller.setScreen(new WaitingScreen(controller, "TEST SCREEN NAME 2", "127.0.0.1"));
+                    controller.setLoginInformation("TEST SCREEN NAME 2", "127.0.0.1", "USERNAME2", "RANDOMPW2");
+                    controller.setScreen(new WaitingScreen(controller));
                 }
             });
 

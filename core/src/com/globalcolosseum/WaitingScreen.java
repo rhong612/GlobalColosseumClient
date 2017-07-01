@@ -13,12 +13,10 @@ public class WaitingScreen implements Screen {
     private float timeElapsed;
     private static final float SECONDS_PER_POLL = 5;
 
-    public WaitingScreen(GlobalColosseumController controller, String playerName, String ipAddress) {
+    public WaitingScreen(GlobalColosseumController controller) {
         this.controller = controller;
         timeElapsed = 0;
-    	String password = "password";
-    	String screenName = "Test";
-        controller.getNetworkManager().connect(ipAddress, screenName, playerName, password);
+        controller.getNetworkManager().connect(controller.getIpAddress(), controller.getScreenName(), controller.getUserName(), controller.getPassword());
     }
 
     @Override
