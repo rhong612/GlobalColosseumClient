@@ -16,7 +16,6 @@ public class WaitingScreen implements Screen {
     public WaitingScreen(GlobalColosseumController controller) {
         this.controller = controller;
         timeElapsed = 0;
-        controller.getNetworkManager().connect(controller.getIpAddress(), controller.getScreenName(), controller.getUserName(), controller.getPassword());
     }
 
     @Override

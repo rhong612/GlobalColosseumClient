@@ -91,6 +91,7 @@ public class GameSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 controller.getNetworkManager().sendControl(ENTER_CONTROL_STRING);
+                controller.setScreen(new WaitingScreen(controller));
             }
         });
         table.add(upButton);

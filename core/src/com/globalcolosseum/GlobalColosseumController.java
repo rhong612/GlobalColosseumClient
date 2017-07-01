@@ -64,4 +64,11 @@ public class GlobalColosseumController extends Game {
 	public String getPassword() {
 		return password;
 	}
+
+	public void startGame(String gameID) {
+		//Arkanoid
+		if (gameID.equals("GameID=-1428952957;Level=1")) {
+			setScreen(new Arkanoid(this));
+		}
+	}
 }
