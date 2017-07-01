@@ -83,7 +83,7 @@ public class NetworkManager {
 		request.setTimeOut(POLL_TIMEOUT);
 		Json json = new Json();
 		JSONRPCRequest message = new JSONRPCRequest("poll", null, profile.getPlayerID());
-		String content = json.toJson(message);
+		final String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
 		Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
@@ -96,12 +96,7 @@ public class NetworkManager {
 					JSONRPCResponse message = json.fromJson(JSONRPCResponse.class, result);
 					//Switch to roll screen
 					if (message.getResult().equals("Roll")) {
-						Gdx.app.postRunnable(new Runnable() {
-							@Override
-							public void run() {
-								controller.setScreen(new DiceRollScreen(controller));
-							}
-						});
+						controller.setScreen(new DiceRollScreen(controller));
 					}
 				}
 			}
