@@ -14,6 +14,7 @@ import com.colosseum.global.Arkanoid.Arkanoid;
 
 public class NetworkManager {
 	protected static Profile profile;
+	private int clientID;
 	private final int POLL_TIMEOUT = 1000;
 	private static String address;
 	private GlobalColosseumController controller;
@@ -39,6 +40,7 @@ public class NetworkManager {
 				JSONRPCResponse message = json.fromJson(JSONRPCResponse.class, result);
 				NetworkManager.address = address;
 				NetworkManager.profile = (Profile)message.getResult();
+				clientID = message.getID();
 			}
 			
 			@Override
@@ -57,7 +59,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("logout", new String[] { profile.getUsername() }, profile.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("logout", new String[] { profile.getUsername() }, clientID);
 		request.setContent(json.toJson(message));
 		Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
 			@Override
@@ -83,7 +85,7 @@ public class NetworkManager {
 		request.setUrl("http://" + address);
 		request.setTimeOut(POLL_TIMEOUT);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("poll", null, profile.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("poll", null, clientID);
 		final String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
@@ -122,7 +124,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("postRoll", new String[] { String.valueOf(roll) }, profile.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("postRoll", new String[] { String.valueOf(roll) }, clientID);
 		String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
@@ -149,7 +151,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("postControl", new String[] { button }, profile.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("postControl", new String[] { button }, clientID);
 		String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);
@@ -176,7 +178,7 @@ public class NetworkManager {
 		HttpRequest request = new HttpRequest(HttpMethods.POST);
 		request.setUrl("http://" + address);
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("postScore", new String[] { String.valueOf(score) }, profile.getPlayerID());
+		JSONRPCRequest message = new JSONRPCRequest("postScore", new String[] { String.valueOf(score) }, clientID);
 		String content = json.toJson(message);
 		request.setContent(content);
 		System.out.println("Send: " + content);

@@ -2,14 +2,14 @@ package com.globalcolosseum;
 
 public class JSONRPCResponse {
 	private Object result;
-	private String error;
+	private Object error;
 	private int id;
 	
 	public JSONRPCResponse() {
 		//Required to deserialize from server.
 	}
 	
-	public JSONRPCResponse(Object result, String error, int id) {
+	public JSONRPCResponse(Object result, Object error, int id) {
 		this.result = result;
 		this.error = error;
 		this.id = id;
@@ -19,7 +19,7 @@ public class JSONRPCResponse {
 		return result;
 	}
 	
-	public String getError() {
+	public Object getError() {
 		return error;
 	}
 	
