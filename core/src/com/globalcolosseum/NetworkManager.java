@@ -101,6 +101,14 @@ public class NetworkManager {
 					if (message.getResult().equals("Roll")) {
 						controller.setScreen(new DiceRollScreen(controller));
 					}
+					//Switch to pick game screen
+					else if (message.getResult().equals("Pick")) {
+						;
+					}
+					//Switch back to main screen
+					else if (message.getResult().equals("Disconnect")) {
+						;
+					}
 					//Identify the correct game and start it
 					else {
 						controller.startGame(message.getResult().toString());
