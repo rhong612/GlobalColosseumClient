@@ -30,8 +30,6 @@ public class ArkanoidScore implements Screen {
     private Label scoreNumberLabel;
     private Stage stage;
 
-    private static final float SECONDS_PER_POLL = 5;
-
     private float timeElapsed;
 
 
@@ -71,9 +69,8 @@ public class ArkanoidScore implements Screen {
         stage.draw();
 
         timeElapsed += delta;
-        if (timeElapsed > SECONDS_PER_POLL) {
-            timeElapsed = 0;
-            controller.getNetworkManager().poll(); //Look for "Disconnect" message
+        if (timeElapsed > 5) {
+            controller.setScreen(new WaitingScreen(controller));
         }
     }
 
