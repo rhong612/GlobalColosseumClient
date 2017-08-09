@@ -6,7 +6,6 @@ import com.badlogic.gdx.Net.HttpRequest;
 import com.badlogic.gdx.Net.HttpResponse;
 import com.badlogic.gdx.Net.HttpResponseListener;
 import com.badlogic.gdx.utils.Json;
-import com.colosseum.global.Arkanoid.Arkanoid;
 
 /**
  *
@@ -100,6 +99,10 @@ public class NetworkManager {
 					//Switch to roll screen
 					if (message.getResult().equals("Roll")) {
 						controller.setScreen(new DiceRollScreen(controller));
+					}
+					//Stop the current game
+					else if (message.getResult().equals("Disconnect")) {
+						controller.setScreen(new WaitingScreen(controller));
 					}
 					//Identify the correct game and start it
 					else {

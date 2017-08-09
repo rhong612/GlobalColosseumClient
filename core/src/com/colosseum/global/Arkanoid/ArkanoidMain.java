@@ -15,7 +15,7 @@ import com.globalcolosseum.WaitingScreen;
 /**
  *
  */
-public class Arkanoid implements Screen {
+public class ArkanoidMain implements Screen {
 
     private GlobalColosseumController controller;
     private World world;
@@ -28,7 +28,7 @@ public class Arkanoid implements Screen {
     public static final int GAME_WIDTH = 1600;
     public static final int GAME_HEIGHT = 900;
 
-    public Arkanoid(GlobalColosseumController controller) {
+    public ArkanoidMain(GlobalColosseumController controller) {
         this.controller = controller;
     }
 
@@ -57,7 +57,7 @@ public class Arkanoid implements Screen {
 
         if (world.isGameOver()) {
             controller.getNetworkManager().sendScore(world.getScore());
-            controller.setScreen(new WaitingScreen(controller));
+            controller.setScreen(new ArkanoidScore(controller, world.getScore()));
         }
     }
 

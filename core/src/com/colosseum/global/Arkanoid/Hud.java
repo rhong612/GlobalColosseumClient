@@ -14,9 +14,9 @@ public class Hud extends Stage{
 
     private Label scoreTitleLabel;
     private Label scoreNumberLabel;
-    private Arkanoid arkanoid;
+    private ArkanoidMain arkanoid;
 
-    public Hud(Arkanoid arkanoid) {
+    public Hud(ArkanoidMain arkanoid) {
         super();
         this.arkanoid = arkanoid;
         scoreTitleLabel = new Label("SCORE", new Label.LabelStyle(new BitmapFont(), Color.BLUE));

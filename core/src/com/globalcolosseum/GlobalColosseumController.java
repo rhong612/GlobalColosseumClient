@@ -3,7 +3,8 @@ package com.globalcolosseum;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.colosseum.global.Arkanoid.Arkanoid;
+import com.colosseum.global.Arkanoid.ArkanoidMain;
+import com.colosseum.global.Arkanoid.ArkanoidStart;
 
 public class GlobalColosseumController extends Game {
 
@@ -68,7 +69,16 @@ public class GlobalColosseumController extends Game {
 	public void startGame(String gameID) {
 		//Arkanoid
 		if (gameID.equals("GameID=-1428952957;Level=1")) {
-			setScreen(new Arkanoid(this));
+			Gdx.app.postRunnable(new Runnable() {
+				@Override
+				public void run() {
+					if (GlobalColosseumController.this.getScreen() != null) {
+						GlobalColosseumController.this.getScreen().dispose();
+					}
+
+					GlobalColosseumController.super.setScreen(new ArkanoidStart(GlobalColosseumController.this));
+				}
+			});
 		}
 	}
 }
