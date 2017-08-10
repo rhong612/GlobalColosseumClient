@@ -38,10 +38,10 @@ public class World implements InputProcessor {
     private final int PANEL_HEIGHT = 30;
     private final int BALL_RADIUS = 15;
     private final int NUM_COLUMNS = 15;
-    private final int NUM_ROWS = 4;
+    private final int NUM_ROWS = 5;
     private final int BRICK_HEIGHT = 70;
     private final int BRICK_WIDTH = ArkanoidMain.GAME_WIDTH / NUM_COLUMNS;
-    private final int PANEL_WIDTH = BRICK_WIDTH * 7;
+    private final int PANEL_WIDTH = BRICK_WIDTH * 2;
 
     public World(Viewport viewport) {
         score = 0;

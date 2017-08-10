@@ -25,8 +25,8 @@ public class ArkanoidMain implements Screen {
     private Camera camera;
     private Viewport viewport;
 
-    public static final int GAME_WIDTH = 1600;
-    public static final int GAME_HEIGHT = 900;
+    public static final int GAME_WIDTH = 900;
+    public static final int GAME_HEIGHT = 1600;
 
     public ArkanoidMain(GlobalColosseumController controller) {
         this.controller = controller;
