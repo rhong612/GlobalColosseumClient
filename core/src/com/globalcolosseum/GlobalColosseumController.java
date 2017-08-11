@@ -80,6 +80,7 @@ public class GlobalColosseumController extends Game {
 					GlobalColosseumController.super.setScreen(new ArkanoidStart(GlobalColosseumController.this));
 				}
 			});
+			//Plane
 		} else if (gameID.equals("GameID=965296586;Level=1")) {
 			Gdx.app.postRunnable(new Runnable() {
 				@Override

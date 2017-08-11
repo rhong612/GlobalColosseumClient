@@ -142,15 +142,17 @@ public class PlaneMain implements Screen {
 	
 	private void updateWorld(float deltaTime) {
 		planeStateTime += deltaTime;
-		
 		if(Gdx.input.justTouched()) {
 			if(gameState == GameState.Start) {
+				System.out.println("START DAH!");
 				gameState = GameState.Running;
 			}
 			if(gameState == GameState.Running) {
+				System.out.println("RUNNING DAH!");
 				planeVelocity.set(PLANE_VELOCITY_X, PLANE_JUMP_IMPULSE);
 			}
 			if(gameState == GameState.GameOver) {
+				System.out.println("GAME OVER DAH!");
 				music.stop();
 				controller.setScreen(new WaitingScreen(controller));
 			}
@@ -279,7 +281,9 @@ public class PlaneMain implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		shapeRenderer.dispose();
+		batch.dispose();
+		background.dispose();
+		font.dispose();
 	}
 }
