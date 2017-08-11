@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.colosseum.global.Arkanoid.ArkanoidMain;
 import com.colosseum.global.Arkanoid.ArkanoidStart;
+import com.globalcolosseum.PlaneGame.PlaneMain;
 
 public class GlobalColosseumController extends Game {
 
@@ -77,6 +78,17 @@ public class GlobalColosseumController extends Game {
 					}
 
 					GlobalColosseumController.super.setScreen(new ArkanoidStart(GlobalColosseumController.this));
+				}
+			});
+		} else if (gameID.equals("GameID=965296586;Level=1")) {
+			Gdx.app.postRunnable(new Runnable() {
+				@Override
+				public void run() {
+					if (GlobalColosseumController.this.getScreen() != null) {
+						GlobalColosseumController.this.getScreen().dispose();
+					}
+
+					GlobalColosseumController.super.setScreen(new PlaneMain(GlobalColosseumController.this));
 				}
 			});
 		}
