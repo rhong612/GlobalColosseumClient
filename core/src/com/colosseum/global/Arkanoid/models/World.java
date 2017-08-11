@@ -43,11 +43,11 @@ public class World implements InputProcessor {
     private final int BRICK_WIDTH = ArkanoidMain.GAME_WIDTH / NUM_COLUMNS;
     private final int PANEL_WIDTH = BRICK_WIDTH * 2;
 
-    public World(Viewport viewport) {
+    public World(Viewport viewport, int level) {
         score = 0;
         gameOver = false;
         bricks = new ArrayList<>();
-        initializeLevel(1);
+        initializeLevel(level);
         worldStart = false;
         this.viewport = viewport;
         playerPanel = new Panel(ArkanoidMain.GAME_WIDTH / 2, ArkanoidMain.GAME_HEIGHT / 10, PANEL_WIDTH, PANEL_HEIGHT);
@@ -250,7 +250,7 @@ public class World implements InputProcessor {
 
     private void initializeLevel(int level) {
         bricks.clear();
-        if (level == 0) {
+        if (level == 1) {
             for (int i = 0; i < NUM_COLUMNS; i++) {
                 for (int j = 1; j <= NUM_ROWS; j++) {
                     bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
@@ -258,7 +258,7 @@ public class World implements InputProcessor {
             }
             addRowLimit = Integer.MAX_VALUE;
         }
-        else if (level == 1) {
+        else if (level == 2) {
             //Add top row
             for (int i = 0; i < NUM_COLUMNS; i++) {
                 bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 2));
@@ -271,7 +271,7 @@ public class World implements InputProcessor {
             }
             addRowLimit = Integer.MAX_VALUE;
         }
-        else if (level == 2) {
+        else if (level == 3) {
             for (int i = 0; i < NUM_COLUMNS; i++) {
                 for (int j = 1; j <= NUM_ROWS; j++) {
                     bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));

@@ -67,9 +67,9 @@ public class GlobalColosseumController extends Game {
 		return password;
 	}
 
-	public void startGame(String gameID) {
+	public void startGame(final String gameID) {
 		//Arkanoid
-		if (gameID.equals("GameID=-1428952957;Level=1")) {
+		if (gameID.contains("GameID=-1428952957;")) {
 			Gdx.app.postRunnable(new Runnable() {
 				@Override
 				public void run() {
@@ -77,7 +77,17 @@ public class GlobalColosseumController extends Game {
 						GlobalColosseumController.this.getScreen().dispose();
 					}
 
-					GlobalColosseumController.super.setScreen(new ArkanoidStart(GlobalColosseumController.this));
+					int level = 0;
+					if (gameID.contains("Level=1")) {
+						level = 1;
+					}
+					else if (gameID.contains("Level=2")) {
+						level = 2;
+					}
+					else {
+						level = 3;
+					}
+					GlobalColosseumController.super.setScreen(new ArkanoidStart(GlobalColosseumController.this, level));
 				}
 			});
 			//Plane

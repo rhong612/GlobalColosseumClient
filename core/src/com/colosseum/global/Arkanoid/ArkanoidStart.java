@@ -26,13 +26,15 @@ public class ArkanoidStart implements Screen, InputProcessor {
     private Label titleLabel;
     private Label startLabel;
     private Stage stage;
+    private int level;
 
 
     public static final int GAME_WIDTH = 1600;
     public static final int GAME_HEIGHT = 900;
 
-    public ArkanoidStart(GlobalColosseumController controller) {
+    public ArkanoidStart(GlobalColosseumController controller, int level) {
         this.controller = controller;
+        this.level = level;
         stage = new Stage();
     }
 
@@ -110,7 +112,7 @@ public class ArkanoidStart implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        controller.setScreen(new ArkanoidMain(controller));
+        controller.setScreen(new ArkanoidMain(controller, level));
         return true;
     }
 
