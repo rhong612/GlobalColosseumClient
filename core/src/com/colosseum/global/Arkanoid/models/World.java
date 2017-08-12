@@ -5,7 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.colosseum.global.Arkanoid.Arkanoid;
+import com.colosseum.global.Arkanoid.ArkanoidMain;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,19 +38,19 @@ public class World implements InputProcessor {
     private final int PANEL_HEIGHT = 30;
     private final int BALL_RADIUS = 15;
     private final int NUM_COLUMNS = 15;
-    private final int NUM_ROWS = 4;
+    private final int NUM_ROWS = 5;
     private final int BRICK_HEIGHT = 70;
-    private final int BRICK_WIDTH = Arkanoid.GAME_WIDTH / NUM_COLUMNS;
-    private final int PANEL_WIDTH = BRICK_WIDTH * 7;
+    private final int BRICK_WIDTH = ArkanoidMain.GAME_WIDTH / NUM_COLUMNS;
+    private final int PANEL_WIDTH = BRICK_WIDTH * 2;
 
-    public World(Viewport viewport) {
+    public World(Viewport viewport, int level) {
         score = 0;
         gameOver = false;
         bricks = new ArrayList<>();
-        initializeLevel(1);
+        initializeLevel(level);
         worldStart = false;
         this.viewport = viewport;
-        playerPanel = new Panel(Arkanoid.GAME_WIDTH / 2, Arkanoid.GAME_HEIGHT / 10, PANEL_WIDTH, PANEL_HEIGHT);
+        playerPanel = new Panel(ArkanoidMain.GAME_WIDTH / 2, ArkanoidMain.GAME_HEIGHT / 10, PANEL_WIDTH, PANEL_HEIGHT);
         ball = new Ball(playerPanel.getX(), playerPanel.getY() + playerPanel.getHeight(), BALL_RADIUS);
 
 
@@ -158,16 +158,16 @@ public class World implements InputProcessor {
         }
 
         //Right Wall
-        else if (ball.getX() >= Arkanoid.GAME_WIDTH) {
+        else if (ball.getX() >= ArkanoidMain.GAME_WIDTH) {
             ball.getVelocity().x *= -1;
-            ball.setX(Arkanoid.GAME_WIDTH - ball.getRadius());
+            ball.setX(ArkanoidMain.GAME_WIDTH - ball.getRadius());
             hitWallSound.play();
         }
 
         //Ceiling
-        else if (ball.getY() >= Arkanoid.GAME_HEIGHT) {
+        else if (ball.getY() >= ArkanoidMain.GAME_HEIGHT) {
             ball.getVelocity().y *= -1;
-            ball.setY(Arkanoid.GAME_HEIGHT - ball.getRadius());
+            ball.setY(ArkanoidMain.GAME_HEIGHT - ball.getRadius());
             hitWallSound.play();
         }
 
@@ -244,37 +244,37 @@ public class World implements InputProcessor {
 
         //Add top row
         for (int i = 0; i < NUM_COLUMNS; i++) {
-            bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
+            bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
         }
     }
 
     private void initializeLevel(int level) {
         bricks.clear();
-        if (level == 0) {
+        if (level == 1) {
             for (int i = 0; i < NUM_COLUMNS; i++) {
                 for (int j = 1; j <= NUM_ROWS; j++) {
-                    bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
-                }
-            }
-            addRowLimit = Integer.MAX_VALUE;
-        }
-        else if (level == 1) {
-            //Add top row
-            for (int i = 0; i < NUM_COLUMNS; i++) {
-                bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 2));
-            }
-            //Add the rest
-            for (int i = 0; i < NUM_COLUMNS; i++) {
-                for (int j = 2; j <= NUM_ROWS; j++) {
-                    bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
+                    bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
                 }
             }
             addRowLimit = Integer.MAX_VALUE;
         }
         else if (level == 2) {
+            //Add top row
+            for (int i = 0; i < NUM_COLUMNS; i++) {
+                bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 2));
+            }
+            //Add the rest
+            for (int i = 0; i < NUM_COLUMNS; i++) {
+                for (int j = 2; j <= NUM_ROWS; j++) {
+                    bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
+                }
+            }
+            addRowLimit = Integer.MAX_VALUE;
+        }
+        else if (level == 3) {
             for (int i = 0; i < NUM_COLUMNS; i++) {
                 for (int j = 1; j <= NUM_ROWS; j++) {
-                    bricks.add(new Brick(i * BRICK_WIDTH, Arkanoid.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
+                    bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
                 }
             }
             addRowLimit = 10;

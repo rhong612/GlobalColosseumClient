@@ -4,8 +4,7 @@ package com.globalcolosseum;
  *
  */
 public class Profile {
-	private int id;
-    private String username;
+	private String username;
     private String password;
     private int win;
     private int loss;
@@ -20,10 +19,6 @@ public class Profile {
         loss = 0;
     }
     
-    public int getPlayerID() {
-        return id;
-    }
-
     public String getUsername() {
         return username;
     }
