@@ -3,7 +3,6 @@ package com.globalcolosseum;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.colosseum.global.Arkanoid.ArkanoidMain;
 import com.colosseum.global.Arkanoid.ArkanoidStart;
 import com.globalcolosseum.PlaneGame.PlaneMain;
 
@@ -91,15 +90,25 @@ public class GlobalColosseumController extends Game {
 				}
 			});
 			//Plane
-		} else if (gameID.equals("GameID=965296586;Level=1")) {
+		} else if (gameID.contains("GameID=965296586;")) {
 			Gdx.app.postRunnable(new Runnable() {
 				@Override
 				public void run() {
 					if (GlobalColosseumController.this.getScreen() != null) {
 						GlobalColosseumController.this.getScreen().dispose();
 					}
-
-					GlobalColosseumController.super.setScreen(new PlaneMain(GlobalColosseumController.this));
+					
+					short level = 0;
+					if (gameID.contains("Level=1")) {
+						level = 1;
+					}
+					else if (gameID.contains("Level=2")) {
+						level = 2;
+					}
+					else {
+						level = 3;
+					}
+					GlobalColosseumController.super.setScreen(new PlaneMain(GlobalColosseumController.this, level));
 				}
 			});
 		}

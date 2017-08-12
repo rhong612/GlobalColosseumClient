@@ -44,13 +44,15 @@ import com.globalcolosseum.GlobalColosseumController;
 import com.globalcolosseum.WaitingScreen;
 
 public class PlaneMain implements Screen {
-	private GlobalColosseumController controller;
+	private final float PLANE_JUMP_IMPULSE = 350;
+	private final float GRAVITY = -20;
+	private final float PLANE_VELOCITY_X = 200;
+	private final float PLANE_START_Y = 240;
+	private final float PLANE_START_X = 50;
 	
-	private static final float PLANE_JUMP_IMPULSE = 350;
-	private static final float GRAVITY = -20;
-	private static final float PLANE_VELOCITY_X = 200;
-	private static final float PLANE_START_Y = 240;
-	private static final float PLANE_START_X = 50;
+	private GlobalColosseumController controller;
+	private float planeVelocityX;
+	
 	ShapeRenderer shapeRenderer;
 	SpriteBatch batch;
 	OrthographicCamera camera;
@@ -80,8 +82,10 @@ public class PlaneMain implements Screen {
 	Music music;
 	Sound explode;
 	
-	public PlaneMain(GlobalColosseumController controller) {
+	public PlaneMain(GlobalColosseumController controller, short level) {
 		this.controller = controller;
+
+		planeVelocityX = PLANE_VELOCITY_X + level - 1;
 	
 	    shapeRenderer = new ShapeRenderer();
 		batch = new SpriteBatch();
@@ -130,6 +134,10 @@ public class PlaneMain implements Screen {
 		
 		rocks.clear();
 		for(int i = 0; i < 5; i++) {
+			if (level == 1 && i % 2 == 1)
+				continue;
+			else if (level == 2 && i == 4)
+				continue;
 			boolean isDown = MathUtils.randomBoolean();
 			rocks.add(new Rock(700 + i * 200, isDown?480-rock.getRegionHeight(): 0, isDown? rockDown: rock));
 		}
@@ -147,7 +155,7 @@ public class PlaneMain implements Screen {
 				gameState = GameState.Running;
 			}
 			if(gameState == GameState.Running) {
-				planeVelocity.set(PLANE_VELOCITY_X, PLANE_JUMP_IMPULSE);
+				planeVelocity.set(planeVelocityX, PLANE_JUMP_IMPULSE);
 			}
 			if(gameState == GameState.GameOver) {
 				music.stop();
@@ -231,6 +239,9 @@ public class PlaneMain implements Screen {
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		if (score != 0 && score % 5 == 0)
+			planeVelocityX += 1;
 		
 		updateWorld(delta);
 		drawWorld();

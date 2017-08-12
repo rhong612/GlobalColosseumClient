@@ -11,7 +11,7 @@ public class WaitingScreen implements Screen {
 
     private GlobalColosseumController controller;
     private float timeElapsed;
-    private static final float SECONDS_PER_POLL = 5;
+    private static final float SECONDS_PER_POLL = 2;
 
     public WaitingScreen(GlobalColosseumController controller) {
         this.controller = controller;
