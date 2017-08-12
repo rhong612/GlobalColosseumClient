@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.colosseum.global.Arkanoid.Arkanoid;
+import com.colosseum.global.Memory.Memory;
 
 public class GlobalColosseumController extends Game {
 
@@ -17,6 +18,7 @@ public class GlobalColosseumController extends Game {
 	public void create () {
 		networkManager = new NetworkManager(this);
 		setScreen(new LoginScreen(this));
+		//setScreen(new Memory(this));
 	}
 
 	@Override
@@ -66,9 +68,44 @@ public class GlobalColosseumController extends Game {
 	}
 
 	public void startGame(String gameID) {
+		/*
 		//Arkanoid
 		if (gameID.equals("GameID=-1428952957;Level=1")) {
 			setScreen(new Arkanoid(this));
 		}
+		//Memory
+		else if (gameID.equals("GameID=-1993889503;Level=1"))
+		{
+			setScreen(new Memory(this));
+		}
+		*/
+		//Arkanoid
+				if (gameID.equals("GameID=-1428952957;Level=1")) {
+					Gdx.app.postRunnable(new Runnable() {
+						@Override
+						public void run() {
+							if (GlobalColosseumController.this.getScreen() != null) {
+								GlobalColosseumController.this.getScreen().dispose();
+							}
+
+							GlobalColosseumController.super.setScreen(new Arkanoid(GlobalColosseumController.this));
+						}
+					});
+				}
+				//Memory
+				else if (gameID.equals("GameID=-1993889503;Level=1"))
+				{
+					Gdx.app.postRunnable(new Runnable() {
+						@Override
+						public void run() {
+							if (GlobalColosseumController.this.getScreen() != null) {
+								GlobalColosseumController.this.getScreen().dispose();
+							}
+
+							GlobalColosseumController.super.setScreen(new Memory(GlobalColosseumController.this));
+						}
+					});
+				}
+				
 	}
 }
