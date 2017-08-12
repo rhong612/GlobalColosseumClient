@@ -24,15 +24,14 @@ public class ArkanoidMain implements Screen {
 
     private Camera camera;
     private Viewport viewport;
+    private int level;
 
     public static final int GAME_WIDTH = 900;
     public static final int GAME_HEIGHT = 1600;
 
     public ArkanoidMain(GlobalColosseumController controller, int level) {
         this.controller = controller;
-        world = new World(viewport, level);
-        worldRenderer = new WorldRenderer(world, camera.combined);
-        hud = new Hud(this);
+        this.level = level;
     }
 
     @Override
@@ -42,6 +41,10 @@ public class ArkanoidMain implements Screen {
         viewport.apply();
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
+
+        world = new World(viewport, level);
+        worldRenderer = new WorldRenderer(world, camera.combined);
+        hud = new Hud(this);
 
         Gdx.input.setInputProcessor(world);
     }
