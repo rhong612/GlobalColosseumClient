@@ -240,7 +240,7 @@ public class PlaneMain implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		if (score != 0 && score % 5 == 0)
+		if (score != 0 && score % 6 == 0)
 			planeVelocityX += 1;
 		
 		updateWorld(delta);
