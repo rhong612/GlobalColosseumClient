@@ -74,7 +74,6 @@ public class LoginScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 controller.setLoginInformation(playerTextField.getText(), serverTextField.getText(), usernameTextField.getText(), passwordTextField.getText());
                 controller.getNetworkManager().connect(controller.getIpAddress(), controller.getScreenName(), controller.getUserName(), controller.getPassword());
-                controller.setScreen(new WaitingScreen(controller));
             }
         });
 
@@ -101,7 +100,6 @@ public class LoginScreen implements Screen {
                 public void clicked(InputEvent event, float x, float y) {
                     controller.setLoginInformation("TEST SCREEN NAME 1", "127.0.0.1", "USERNAME1", "RANDOMPW");
                     controller.getNetworkManager().connect(controller.getIpAddress(), controller.getScreenName(), controller.getUserName(), controller.getPassword());
-                    controller.setScreen(new WaitingScreen(controller));
                 }
             });
 
@@ -111,7 +109,6 @@ public class LoginScreen implements Screen {
                 public void clicked(InputEvent event, float x, float y) {
                     controller.setLoginInformation("TEST SCREEN NAME 2", "127.0.0.1", "USERNAME2", "RANDOMPW2");
                     controller.getNetworkManager().connect(controller.getIpAddress(), controller.getScreenName(), controller.getUserName(), controller.getPassword());
-                    controller.setScreen(new WaitingScreen(controller));
                 }
             });
 

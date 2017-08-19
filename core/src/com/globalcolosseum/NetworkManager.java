@@ -40,6 +40,7 @@ public class NetworkManager {
 				NetworkManager.address = address;
 				NetworkManager.profile = (Profile)message.getResult();
 				clientID = message.getID();
+				controller.setScreen(new WaitingScreen(controller));
 			}
 			
 			@Override
