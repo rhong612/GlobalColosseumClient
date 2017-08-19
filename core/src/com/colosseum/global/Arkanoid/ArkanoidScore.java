@@ -33,13 +33,12 @@ public class ArkanoidScore implements Screen {
     private float timeElapsed;
 
 
-    public static final int GAME_WIDTH = 1600;
-    public static final int GAME_HEIGHT = 900;
+    public static final int GAME_WIDTH = 900;
+    public static final int GAME_HEIGHT = 1600;
 
     public ArkanoidScore(GlobalColosseumController controller, int finalScore) {
         this.finalScore = finalScore;
         this.controller = controller;
-        stage = new Stage();
     }
 
     @Override
@@ -50,8 +49,11 @@ public class ArkanoidScore implements Screen {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
 
-        scoreTitleLabel = new Label("SCORE", new Label.LabelStyle(new BitmapFont(), Color.BLUE));
+        final int fontScale = 5;
+        scoreTitleLabel = new Label("FINAL SCORE", new Label.LabelStyle(new BitmapFont(), Color.BLUE));
         scoreNumberLabel = new Label(Integer.toString(finalScore), new Label.LabelStyle(new BitmapFont(), Color.BLUE));
+        scoreTitleLabel.setFontScale(fontScale);
+        scoreNumberLabel.setFontScale(fontScale);
 
         Table labelTable = new Table();
         labelTable.top();
@@ -60,6 +62,7 @@ public class ArkanoidScore implements Screen {
         labelTable.row();
         labelTable.add(scoreNumberLabel);
 
+        stage = new Stage(viewport);
         stage.addActor(labelTable);
     }
 

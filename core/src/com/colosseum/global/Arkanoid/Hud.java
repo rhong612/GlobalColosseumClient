@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  *
@@ -16,11 +17,16 @@ public class Hud extends Stage{
     private Label scoreNumberLabel;
     private ArkanoidMain arkanoid;
 
-    public Hud(ArkanoidMain arkanoid) {
-        super();
+    public Hud(Viewport viewport, ArkanoidMain arkanoid) {
+        super(viewport);
         this.arkanoid = arkanoid;
-        scoreTitleLabel = new Label("SCORE", new Label.LabelStyle(new BitmapFont(), Color.BLUE));
-        scoreNumberLabel = new Label(Integer.toString(arkanoid.getPlayerScore()), new Label.LabelStyle(new BitmapFont(), Color.BLUE));
+
+        final int fontScale = 2;
+        scoreTitleLabel = new Label("SCORE", new Label.LabelStyle(new BitmapFont(), Color.RED));
+        scoreNumberLabel = new Label(Integer.toString(arkanoid.getPlayerScore()), new Label.LabelStyle(new BitmapFont(), Color.RED));
+
+        scoreTitleLabel.setFontScale(fontScale);
+        scoreNumberLabel.setFontScale(fontScale);
 
         Table labelTable = new Table();
         labelTable.top();

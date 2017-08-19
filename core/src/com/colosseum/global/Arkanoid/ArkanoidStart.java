@@ -29,13 +29,12 @@ public class ArkanoidStart implements Screen, InputProcessor {
     private int level;
 
 
-    public static final int GAME_WIDTH = 1600;
-    public static final int GAME_HEIGHT = 900;
+    public static final int GAME_WIDTH = 900;
+    public static final int GAME_HEIGHT = 1600;
 
     public ArkanoidStart(GlobalColosseumController controller, int level) {
         this.controller = controller;
         this.level = level;
-        stage = new Stage();
     }
 
     @Override
@@ -46,8 +45,11 @@ public class ArkanoidStart implements Screen, InputProcessor {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
 
+        final int fontScale = 5;
         titleLabel = new Label("ARKANOID", new Label.LabelStyle(new BitmapFont(), Color.BLUE));
+        titleLabel.setFontScale(fontScale);
         startLabel = new Label("PRESS TO START...", new Label.LabelStyle(new BitmapFont(), Color.BLUE));
+        startLabel.setFontScale(fontScale);
 
         Table labelTable = new Table();
         labelTable.top();
@@ -57,7 +59,9 @@ public class ArkanoidStart implements Screen, InputProcessor {
         labelTable.add(startLabel);
         labelTable.row();
 
+        stage = new Stage(viewport);
         stage.addActor(labelTable);
+
 
         Gdx.input.setInputProcessor(this);
     }

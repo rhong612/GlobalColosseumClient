@@ -30,8 +30,8 @@ public class GameSelectionScreen implements Screen {
 
     private Camera camera;
     private Viewport viewport;
-    private static final int VIRTUAL_SCREEN_WIDTH = 1600;
-    private static final int VIRTUAL_SCREEN_HEIGHT = 900;
+    private static final int VIRTUAL_SCREEN_WIDTH = 600;
+    private static final int VIRTUAL_SCREEN_HEIGHT = 600;
 
     private static final String UP_CONTROL_STRING = "up";
     private static final String DOWN_CONTROL_STRING = "down";
@@ -104,7 +104,7 @@ public class GameSelectionScreen implements Screen {
         table.row();
         table.add(enterButton);
 
-        stage = new Stage();
+        stage = new Stage(viewport);
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
     }

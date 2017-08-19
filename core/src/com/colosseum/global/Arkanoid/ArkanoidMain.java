@@ -44,7 +44,7 @@ public class ArkanoidMain implements Screen {
 
         world = new World(viewport, level);
         worldRenderer = new WorldRenderer(world, camera.combined);
-        hud = new Hud(this);
+        hud = new Hud(viewport, this);
 
         Gdx.input.setInputProcessor(world);
     }

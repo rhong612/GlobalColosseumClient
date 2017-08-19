@@ -110,7 +110,12 @@ public class World implements InputProcessor {
         //0 for first finger
         if (pointer == 0) {
             float worldScreenX = screenToWorldUnits(screenX, screenY).x;
-            playerPanel.move(worldScreenX - startX);
+            float difference = worldScreenX - startX;
+
+            //Player tries to move off right edge
+            if (!(playerPanel.getX() + playerPanel.getWidth() + difference > ArkanoidMain.GAME_WIDTH || playerPanel.getX() + difference < 0)) {
+                playerPanel.move(worldScreenX - startX);
+            }
             startX = worldScreenX;
             return true;
         }

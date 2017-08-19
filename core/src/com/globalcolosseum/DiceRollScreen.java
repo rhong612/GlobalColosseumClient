@@ -40,8 +40,8 @@ public class DiceRollScreen implements Screen {
 
     private Camera camera;
     private Viewport viewport;
-    private static final int VIRTUAL_SCREEN_WIDTH = 1600;
-    private static final int VIRTUAL_SCREEN_HEIGHT = 900;
+    private static final int VIRTUAL_SCREEN_WIDTH = 600;
+    private static final int VIRTUAL_SCREEN_HEIGHT = 600;
 
     private static final short MAX_ROLL = 6;
     private static final short LOWEST_ROLL = 1;
@@ -65,13 +65,16 @@ public class DiceRollScreen implements Screen {
         skin = new Skin(Gdx.files.internal("textures/comic-ui.json"), atlas);
 
         currentDiceNum = MAX_ROLL;
+
+        final int fontScale = 3;
         diceNumberLabel = new Label(Integer.toString(currentDiceNum), new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
+        diceNumberLabel.setFontScale(fontScale);
 
         Table table = new Table();
         table.setFillParent(true);
         table.add(diceNumberLabel);
 
-        stage = new Stage();
+        stage = new Stage(viewport);
         stage.addActor(table);
 
         Gdx.input.setInputProcessor(new InputAdapter() {

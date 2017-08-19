@@ -30,8 +30,8 @@ public class LoginScreen implements Screen {
 
     private Camera camera;
     private Viewport viewport;
-    private static final int VIRTUAL_SCREEN_WIDTH = 1600;
-    private static final int VIRTUAL_SCREEN_HEIGHT = 900;
+    private static final int VIRTUAL_SCREEN_WIDTH = 600;
+    private static final int VIRTUAL_SCREEN_HEIGHT = 600;
 
     private boolean testing = true; //Toggle to false when done testing
 
@@ -50,7 +50,7 @@ public class LoginScreen implements Screen {
         atlas = new TextureAtlas("textures/comic-ui.atlas");
         skin = new Skin(Gdx.files.internal("textures/comic-ui.json"), atlas);
 
-        stage = new Stage();
+        stage = new Stage(viewport);
 
         Table mainTable = new Table();
         mainTable.setFillParent(true);
