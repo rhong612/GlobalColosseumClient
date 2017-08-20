@@ -40,8 +40,14 @@ public class World implements InputProcessor {
     private final int NUM_COLUMNS = 15;
     private final int NUM_ROWS = 5;
     private final int BRICK_HEIGHT = 70;
-    private final int BRICK_WIDTH = ArkanoidMain.GAME_WIDTH / NUM_COLUMNS;
+    private final int BRICK_WIDTH = (ArkanoidMain.GAME_WIDTH - (2 * SIDE_WALL_WIDTH)) / NUM_COLUMNS;
     private final int PANEL_WIDTH = BRICK_WIDTH * 2;
+
+    public static final int SIDE_WALL_WIDTH = ArkanoidMain.GAME_WIDTH / 20;
+    public static final int SIDE_WALL_HEIGHT = ArkanoidMain.GAME_HEIGHT;
+
+    public static final int TOP_WALL_WIDTH = ArkanoidMain.GAME_WIDTH;
+    public static final int TOP_WALL_HEIGHT = SIDE_WALL_WIDTH;
 
     public World(Viewport viewport, int level) {
         score = 0;
@@ -112,8 +118,8 @@ public class World implements InputProcessor {
             float worldScreenX = screenToWorldUnits(screenX, screenY).x;
             float difference = worldScreenX - startX;
 
-            //Player tries to move off right edge
-            if (!(playerPanel.getX() + playerPanel.getWidth() + difference > ArkanoidMain.GAME_WIDTH || playerPanel.getX() + difference < 0)) {
+            //Ensure that player does not move off the edge
+            if (!(playerPanel.getX() + playerPanel.getWidth() + difference > ArkanoidMain.GAME_WIDTH - SIDE_WALL_WIDTH || playerPanel.getX() + difference < SIDE_WALL_WIDTH)) {
                 playerPanel.move(worldScreenX - startX);
             }
             startX = worldScreenX;
@@ -156,23 +162,23 @@ public class World implements InputProcessor {
 
     private void checkCollisions(float delta) {
         //Left Wall
-        if (ball.getX() <= 0) {
+        if (ball.getX() - ball.getRadius() <= SIDE_WALL_WIDTH) {
             ball.getVelocity().x *= -1;
-            ball.setX(0);
+            ball.setX(SIDE_WALL_WIDTH + ball.getRadius());
             hitWallSound.play();
         }
 
         //Right Wall
-        else if (ball.getX() >= ArkanoidMain.GAME_WIDTH) {
+        else if (ball.getX() + ball.getRadius() >= ArkanoidMain.GAME_WIDTH - SIDE_WALL_WIDTH) {
             ball.getVelocity().x *= -1;
-            ball.setX(ArkanoidMain.GAME_WIDTH - ball.getRadius());
+            ball.setX(ArkanoidMain.GAME_WIDTH - ball.getRadius() - SIDE_WALL_WIDTH);
             hitWallSound.play();
         }
 
         //Ceiling
-        else if (ball.getY() >= ArkanoidMain.GAME_HEIGHT) {
+        else if (ball.getY() + ball.getRadius() >= ArkanoidMain.GAME_HEIGHT - TOP_WALL_HEIGHT) {
             ball.getVelocity().y *= -1;
-            ball.setY(ArkanoidMain.GAME_HEIGHT - ball.getRadius());
+            ball.setY(ArkanoidMain.GAME_HEIGHT - ball.getRadius() - TOP_WALL_WIDTH);
             hitWallSound.play();
         }
 
@@ -223,12 +229,12 @@ public class World implements InputProcessor {
 
                     hitPanelSound.play();
                     brick.hit();
+                    activeHitCount++;
                     if (brick.getDurability() == 0) {
                         brickIterator.remove();
-                        activeHitCount++;
+                        score++;
                     }
                     collisionFound = true;
-                    score++;
                 }
             }
         }
@@ -249,7 +255,7 @@ public class World implements InputProcessor {
 
         //Add top row
         for (int i = 0; i < NUM_COLUMNS; i++) {
-            bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
+            bricks.add(new Brick(SIDE_WALL_WIDTH + i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - BRICK_HEIGHT - TOP_WALL_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
         }
     }
 
@@ -258,31 +264,26 @@ public class World implements InputProcessor {
         if (level == 1) {
             for (int i = 0; i < NUM_COLUMNS; i++) {
                 for (int j = 1; j <= NUM_ROWS; j++) {
-                    bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
+                    bricks.add(new Brick(SIDE_WALL_WIDTH + i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - j * BRICK_HEIGHT - TOP_WALL_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
                 }
             }
             addRowLimit = Integer.MAX_VALUE;
         }
         else if (level == 2) {
-            //Add top row
             for (int i = 0; i < NUM_COLUMNS; i++) {
-                bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 2));
-            }
-            //Add the rest
-            for (int i = 0; i < NUM_COLUMNS; i++) {
-                for (int j = 2; j <= NUM_ROWS; j++) {
-                    bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
+                for (int j = 1; j <= NUM_ROWS; j++) {
+                    bricks.add(new Brick(SIDE_WALL_WIDTH + i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - j * BRICK_HEIGHT - TOP_WALL_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
                 }
             }
-            addRowLimit = Integer.MAX_VALUE;
+            addRowLimit = 5;
         }
         else if (level == 3) {
             for (int i = 0; i < NUM_COLUMNS; i++) {
                 for (int j = 1; j <= NUM_ROWS; j++) {
-                    bricks.add(new Brick(i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - j * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 1));
+                    bricks.add(new Brick(SIDE_WALL_WIDTH + i * BRICK_WIDTH, ArkanoidMain.GAME_HEIGHT - j * BRICK_HEIGHT - TOP_WALL_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT, 2));
                 }
             }
-            addRowLimit = 10;
+            addRowLimit = 5;
         }
     }
 

@@ -6,9 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.colosseum.global.Arkanoid.models.Brick;
 import com.colosseum.global.Arkanoid.models.World;
 
@@ -45,7 +42,9 @@ public class WorldRenderer {
 
     private void renderEdges() {
         batch.begin();
-        //TODO: Render the edges
+        batch.draw(wallTexture, 0, 0, World.SIDE_WALL_WIDTH, World.SIDE_WALL_HEIGHT); //Left wall
+        batch.draw(wallTexture, ArkanoidMain.GAME_WIDTH - World.SIDE_WALL_WIDTH, 0, World.SIDE_WALL_WIDTH, World.SIDE_WALL_HEIGHT); //Right wall
+        batch.draw(wallTexture, 0, ArkanoidMain.GAME_HEIGHT - World.TOP_WALL_HEIGHT, World.TOP_WALL_WIDTH, World.TOP_WALL_HEIGHT); //Top Wall
         batch.end();
     }
 
@@ -96,7 +95,6 @@ public class WorldRenderer {
     }
 
     public void dispose() {
-
         renderer.dispose();
         paddleTexture.dispose();
         backgroundTexture.dispose();
