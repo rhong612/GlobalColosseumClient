@@ -2,6 +2,7 @@ package com.colosseum.global.Arkanoid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -26,6 +27,8 @@ public class ArkanoidMain implements Screen {
     private Viewport viewport;
     private int level;
 
+    private Music backgroundMusic;
+
     public static final int GAME_WIDTH = 900;
     public static final int GAME_HEIGHT = 1600;
 
@@ -41,6 +44,10 @@ public class ArkanoidMain implements Screen {
         viewport.apply();
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Arkanoid/bgm.mp3"));
+        backgroundMusic.setLooping(true);
+        backgroundMusic.play();
 
         world = new World(viewport, level);
         worldRenderer = new WorldRenderer(world, camera.combined);
@@ -58,6 +65,7 @@ public class ArkanoidMain implements Screen {
         hud.draw();
 
         if (world.isGameOver()) {
+            backgroundMusic.stop();
             controller.getNetworkManager().sendScore(world.getScore());
             controller.setScreen(new ArkanoidScore(controller, world.getScore()));
         }
