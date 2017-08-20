@@ -54,9 +54,9 @@ public class World implements InputProcessor {
         ball = new Ball(playerPanel.getX(), playerPanel.getY() + playerPanel.getHeight(), BALL_RADIUS);
 
 
-        hitPanelSound = Gdx.audio.newSound(Gdx.files.internal("pong_panel.wav"));
-        hitWallSound = Gdx.audio.newSound(Gdx.files.internal("pong_wall.wav"));
-        missSound = Gdx.audio.newSound(Gdx.files.internal("pong_miss.wav"));
+        hitPanelSound = Gdx.audio.newSound(Gdx.files.internal("Arkanoid/pong_panel.wav"));
+        hitWallSound = Gdx.audio.newSound(Gdx.files.internal("Arkanoid/pong_wall.wav"));
+        missSound = Gdx.audio.newSound(Gdx.files.internal("Arkanoid/pong_miss.wav"));
     }
 
     public void step(float delta) {
