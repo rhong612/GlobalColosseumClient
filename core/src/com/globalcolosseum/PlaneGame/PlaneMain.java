@@ -40,6 +40,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.globalcolosseum.GlobalColosseumController;
 import com.globalcolosseum.WaitingScreen;
 
@@ -49,14 +51,17 @@ public class PlaneMain implements Screen {
 	private final float PLANE_VELOCITY_X = 200;
 	private final float PLANE_START_Y = 240;
 	private final float PLANE_START_X = 50;
-	
+
+	private final float GAME_WIDTH = 800;
+	private final float GAME_HEIGHT = 480;
+
 	private GlobalColosseumController controller;
 	private float planeVelocityX;
 	
 	ShapeRenderer shapeRenderer;
 	SpriteBatch batch;
+	Viewport viewport;
 	OrthographicCamera camera;
-	OrthographicCamera uiCamera;
 	Texture background;
 	TextureRegion ground;
 	float groundOffsetX = 0;
@@ -90,10 +95,10 @@ public class PlaneMain implements Screen {
 	    shapeRenderer = new ShapeRenderer();
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
-		uiCamera = new OrthographicCamera();
-		uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		uiCamera.update();
+		viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT, camera);
+		viewport.apply();
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		camera.update();
 		
 		font = new BitmapFont(Gdx.files.internal("arial.fnt"));
 		
@@ -222,16 +227,16 @@ public class PlaneMain implements Screen {
 		batch.draw(plane.getKeyFrame(planeStateTime), planePosition.x, planePosition.y);
 		batch.end();
 		
-		batch.setProjectionMatrix(uiCamera.combined);
+		batch.setProjectionMatrix(camera.combined);
 		batch.begin();		
 		if(gameState == GameState.Start) {
-			batch.draw(ready, Gdx.graphics.getWidth() / 2 - ready.getRegionWidth() / 2, Gdx.graphics.getHeight() / 2 - ready.getRegionHeight() / 2);
+			batch.draw(ready, GAME_WIDTH / 2 - ready.getRegionWidth() / 2, GAME_HEIGHT / 2 - ready.getRegionHeight() / 2);
 		}
 		if(gameState == GameState.GameOver) {
-			batch.draw(gameOver, Gdx.graphics.getWidth() / 2 - gameOver.getRegionWidth() / 2, Gdx.graphics.getHeight() / 2 - gameOver.getRegionHeight() / 2);
+			batch.draw(gameOver, camera.position.x - gameOver.getRegionWidth() / 2, GAME_HEIGHT / 2 - gameOver.getRegionHeight() / 2);
 		}
 		if(gameState == GameState.GameOver || gameState == GameState.Running) {
-			font.draw(batch, "" + score, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 60);
+			font.draw(batch, "" + score, camera.position.x, GAME_HEIGHT - 60);
 		}
 		batch.end();
 	}
@@ -266,7 +271,10 @@ public class PlaneMain implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
-		
+
+		viewport.update(width, height);
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		camera.update();
 	}
 
 	@Override

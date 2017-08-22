@@ -77,6 +77,8 @@ public class LoginScreen implements Screen {
             }
         });
 
+        TextField.TextFieldStyle textFieldStyle = skin.get(TextField.TextFieldStyle.class);
+        textFieldStyle.font.getData().setScale(1.5f); //Make textfield font bigger
 
         mainTable.add(serverLabel);
         mainTable.add(serverTextField);

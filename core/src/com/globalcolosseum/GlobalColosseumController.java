@@ -17,7 +17,8 @@ public class GlobalColosseumController extends Game {
 	@Override
 	public void create () {
 		networkManager = new NetworkManager(this);
-		setScreen(new LoginScreen(this));
+		//setScreen(new LoginScreen(this));
+		setScreen(new PlaneMain(this, (short)1));
 	}
 
 	@Override
