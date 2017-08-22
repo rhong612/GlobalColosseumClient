@@ -25,6 +25,7 @@ public class ArkanoidStart implements Screen, InputProcessor {
     private Viewport viewport;
     private Label titleLabel;
     private Label startLabel;
+    private Label levelLabel;
     private Stage stage;
     private int level;
 
@@ -50,6 +51,8 @@ public class ArkanoidStart implements Screen, InputProcessor {
         titleLabel.setFontScale(fontScale);
         startLabel = new Label("PRESS TO START...", new Label.LabelStyle(new BitmapFont(), Color.BLUE));
         startLabel.setFontScale(fontScale);
+        levelLabel = new Label("LEVEL: " + level, new Label.LabelStyle(new BitmapFont(), Color.BLUE));
+        levelLabel.setFontScale(fontScale);
 
         Table labelTable = new Table();
         labelTable.top();
@@ -58,6 +61,7 @@ public class ArkanoidStart implements Screen, InputProcessor {
         labelTable.row();
         labelTable.add(startLabel);
         labelTable.row();
+        labelTable.add(levelLabel);
 
         stage = new Stage(viewport);
         stage.addActor(labelTable);

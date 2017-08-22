@@ -57,6 +57,7 @@ public class PlaneMain implements Screen {
 
 	private GlobalColosseumController controller;
 	private float planeVelocityX;
+	private int level;
 	
 	ShapeRenderer shapeRenderer;
 	SpriteBatch batch;
@@ -91,7 +92,8 @@ public class PlaneMain implements Screen {
 		this.controller = controller;
 
 		planeVelocityX = PLANE_VELOCITY_X + level - 1;
-	
+		this.level = level;
+
 	    shapeRenderer = new ShapeRenderer();
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
@@ -228,9 +230,10 @@ public class PlaneMain implements Screen {
 		batch.end();
 		
 		batch.setProjectionMatrix(camera.combined);
-		batch.begin();		
+		batch.begin();
 		if(gameState == GameState.Start) {
 			batch.draw(ready, GAME_WIDTH / 2 - ready.getRegionWidth() / 2, GAME_HEIGHT / 2 - ready.getRegionHeight() / 2);
+			font.draw(batch, "Level: " + level, GAME_WIDTH / 2, GAME_HEIGHT / 3);
 		}
 		if(gameState == GameState.GameOver) {
 			batch.draw(gameOver, camera.position.x - gameOver.getRegionWidth() / 2, GAME_HEIGHT / 2 - gameOver.getRegionHeight() / 2);
