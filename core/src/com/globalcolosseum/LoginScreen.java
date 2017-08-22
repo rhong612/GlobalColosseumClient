@@ -72,6 +72,7 @@ public class LoginScreen implements Screen {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.setOnscreenKeyboardVisible(false);
                 controller.setLoginInformation(playerTextField.getText(), serverTextField.getText(), usernameTextField.getText(), passwordTextField.getText());
                 controller.getNetworkManager().connect(controller.getIpAddress(), controller.getScreenName(), controller.getUserName(), controller.getPassword());
             }
