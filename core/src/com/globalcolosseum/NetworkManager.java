@@ -8,19 +8,14 @@ import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Logger;
-import com.badlogic.gdx.utils.Queue;
 
 public class NetworkManager {
 	protected static Profile profile;
-	private boolean flag;
 	private int clientID;
-	private Queue<JSONRPCResponse> responses;
 	private Socket socket;
 	private Logger logger;
 
 	public NetworkManager() {
-		flag = true;
-		responses = new Queue<JSONRPCResponse>();
 		logger = new Logger("Network", Logger.INFO);
 	}
 	
@@ -31,71 +26,23 @@ public class NetworkManager {
         socketHints.connectTimeout = 4000;
         //create the socket and connect to the server entered in the text box ( x.x.x.x format ) on port 530
         socket = Gdx.net.newClientSocket(Protocol.TCP, address, PORT, socketHints);
-        Thread listenHandler = new Thread() {
-			public void run() {
-				while (flag) {
-					// Read data from the socket
-					StringBuilder sb = new StringBuilder();
-			    	int c;
-			    	int j = 0;
-			    	try {
-			    		do {
-			    			c = socket.getInputStream().read();
-			    			sb.append((char)c);
-			    			if (c == 123) {
-			    				j++;
-			    			} else if (c == 125) {
-			    				j--;
-			    			}
-			    		} while(c != 125 || j != 0);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			    	
-			    	String result = sb.toString().replace("com.MiniGameSDK", "com.globalcolosseum");
-			    	logger.info("Receive: " + result);
-			    	
-			    	Json json = new Json();
-					JSONRPCResponse response = json.fromJson(JSONRPCResponse.class, result);
-					
-		        	synchronized(responses) {	
-	                    responses.addLast(response);
-		        	}
-		        }
-			}
-		};
-		listenHandler.start();
 		return true;
 	}
 	
 	public JSONRPCResponse login(String screenname, String username, String password) {
 		send(new JSONRPCRequest("login", new String[] { screenname, username, password }, 0));
-		while (true) {
-			synchronized(responses) {
-				if (responses.size > 0) {
-					JSONRPCResponse response = responses.removeFirst();
-					clientID = response.getID();
-					return response;
-				}
-			}
-		}
+		JSONRPCResponse response = receive();
+		clientID = response.getID();
+		return response;
 	}
 	
 	public void disconnect() {
 		send(new JSONRPCRequest("logout", new String[] { profile.getUsername() }, clientID));
-		flag = false;
 	}
 	
 	public JSONRPCResponse poll() {
 		send(new JSONRPCRequest("poll", new String[] { }, clientID));
-		do {
-			
-			synchronized(responses) {
-				if (responses.size > 0)
-					return responses.removeFirst();
-			}
-		} while (true);
+		return receive();
 	}
 	
 	public void sendRoll(short roll) {
@@ -120,5 +67,32 @@ public class NetworkManager {
 			logger.info("Fail to send: " + content);
 		}
 		logger.info("Send: " + content);
+	}
+	
+	public JSONRPCResponse receive() {
+		// Read data from the socket
+		StringBuilder sb = new StringBuilder();
+    	int c;
+    	int j = 0;
+    	try {
+    		do {
+    			c = socket.getInputStream().read();
+    			sb.append((char)c);
+    			if (c == 123) {
+    				j++;
+    			} else if (c == 125) {
+    				j--;
+    			}
+    		} while(c != 125 || j != 0);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	String result = sb.toString().replace("com.MiniGameSDK", "com.globalcolosseum");
+    	logger.info("Receive: " + result);
+    	
+    	Json json = new Json();
+		return json.fromJson(JSONRPCResponse.class, result);
 	}
 }
