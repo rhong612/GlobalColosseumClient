@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  *
  */
 public class WaitingScreen implements Screen {
-
     private GlobalColosseumController controller;
     private float timeElapsed;
     private static final float SECONDS_PER_POLL = 2;
@@ -65,7 +64,7 @@ public class WaitingScreen implements Screen {
         timeElapsed += delta;
         if (timeElapsed > SECONDS_PER_POLL) {
             timeElapsed = 0;
-            controller.getNetworkManager().poll();
+            controller.poll();
         }
         stage.draw();
     }

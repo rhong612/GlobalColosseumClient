@@ -73,8 +73,7 @@ public class LoginScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.input.setOnscreenKeyboardVisible(false);
-                controller.setLoginInformation(playerTextField.getText(), serverTextField.getText(), usernameTextField.getText(), passwordTextField.getText());
-                controller.getNetworkManager().connect(controller.getIpAddress(), controller.getScreenName(), controller.getUserName(), controller.getPassword());
+                controller.connect(serverTextField.getText(), playerTextField.getText(), usernameTextField.getText(), passwordTextField.getText());
             }
         });
 
@@ -101,8 +100,7 @@ public class LoginScreen implements Screen {
             testButtonA.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    controller.setLoginInformation("TEST SCREEN NAME 1", "127.0.0.1", "USERNAME1", "RANDOMPW");
-                    controller.getNetworkManager().connect(controller.getIpAddress(), controller.getScreenName(), controller.getUserName(), controller.getPassword());
+                    controller.connect("127.0.0.1", "TEST SCREEN NAME 1", "USERNAME1", "RANDOMPW");
                 }
             });
 
@@ -110,8 +108,7 @@ public class LoginScreen implements Screen {
             testButtonB.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    controller.setLoginInformation("TEST SCREEN NAME 2", "127.0.0.1", "USERNAME2", "RANDOMPW2");
-                    controller.getNetworkManager().connect(controller.getIpAddress(), controller.getScreenName(), controller.getUserName(), controller.getPassword());
+                    controller.connect("127.0.0.1", "TEST SCREEN NAME 2", "USERNAME2", "RANDOMPW2");
                 }
             });
 

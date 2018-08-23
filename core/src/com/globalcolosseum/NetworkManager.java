@@ -1,211 +1,124 @@
 package com.globalcolosseum;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net.HttpMethods;
-import com.badlogic.gdx.Net.HttpRequest;
-import com.badlogic.gdx.Net.HttpResponse;
-import com.badlogic.gdx.Net.HttpResponseListener;
-import com.badlogic.gdx.utils.Json;
+import java.io.IOException;
 
-/**
- *
- */
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net.Protocol;
+import com.badlogic.gdx.net.Socket;
+import com.badlogic.gdx.net.SocketHints;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.Logger;
+import com.badlogic.gdx.utils.Queue;
 
 public class NetworkManager {
 	protected static Profile profile;
+	private boolean flag;
 	private int clientID;
-	private final int POLL_TIMEOUT = 1000;
-	private static String address;
-	private GlobalColosseumController controller;
+	private Queue<JSONRPCResponse> responses;
+	private Socket socket;
+	private Logger logger;
 
-	public NetworkManager(GlobalColosseumController controller) {
-		this.controller = controller;
+	public NetworkManager() {
+		flag = true;
+		responses = new Queue<JSONRPCResponse>();
+		logger = new Logger("Network", Logger.INFO);
 	}
 	
-	public void connect(final String address, String screenname, String username, String password) {
-		HttpRequest request = new HttpRequest(HttpMethods.POST);
-		request.setUrl("http://" + address);
-		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("login", new String[] { screenname, username, password }, 0);
-		String content = json.toJson(message);
-		request.setContent(content);
-		System.out.println("Send: " + content);
-		Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
-			@Override
-			public void handleHttpResponse(HttpResponse httpResponse) {
-				String result = httpResponse.getResultAsString().replace("com.MiniGameSDK", "com.globalcolosseum");
-				System.out.println("Received: " + result);
-				Json json = new Json();
-				JSONRPCResponse message = json.fromJson(JSONRPCResponse.class, result);
-				NetworkManager.address = address;
-				NetworkManager.profile = (Profile)message.getResult();
-				clientID = message.getID();
-				controller.setScreen(new WaitingScreen(controller));
+	public boolean connect(String address) {
+		final int PORT = 530;
+		SocketHints socketHints = new SocketHints();
+        // Socket will time our in 4 seconds
+        socketHints.connectTimeout = 4000;
+        //create the socket and connect to the server entered in the text box ( x.x.x.x format ) on port 530
+        socket = Gdx.net.newClientSocket(Protocol.TCP, address, PORT, socketHints);
+        Thread listenHandler = new Thread() {
+			public void run() {
+				while (flag) {
+					// Read data from the socket
+					StringBuilder sb = new StringBuilder();
+			    	int c;
+			    	int j = 0;
+			    	try {
+			    		do {
+			    			c = socket.getInputStream().read();
+			    			sb.append((char)c);
+			    			if (c == 123) {
+			    				j++;
+			    			} else if (c == 125) {
+			    				j--;
+			    			}
+			    		} while(c != 125 || j != 0);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			    	
+			    	String result = sb.toString().replace("com.MiniGameSDK", "com.globalcolosseum");
+			    	logger.info("Receive: " + result);
+			    	
+			    	Json json = new Json();
+					JSONRPCResponse response = json.fromJson(JSONRPCResponse.class, result);
+					
+		        	synchronized(responses) {	
+	                    responses.addLast(response);
+		        	}
+		        }
 			}
-			
-			@Override
-			public void failed(Throwable t) {
-				System.out.println("something went wrong: " + t.getMessage());
+		};
+		listenHandler.start();
+		return true;
+	}
+	
+	public JSONRPCResponse login(String screenname, String username, String password) {
+		send(new JSONRPCRequest("login", new String[] { screenname, username, password }, 0));
+		while (true) {
+			synchronized(responses) {
+				if (responses.size > 0) {
+					JSONRPCResponse response = responses.removeFirst();
+					clientID = response.getID();
+					return response;
+				}
 			}
-			
-			@Override
-			public void cancelled() {
-				System.out.println("cancelled");
-			}
-		});
+		}
 	}
 	
 	public void disconnect() {
-		HttpRequest request = new HttpRequest(HttpMethods.POST);
-		request.setUrl("http://" + address);
-		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("logout", new String[] { profile.getUsername() }, clientID);
-		request.setContent(json.toJson(message));
-		Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
-			@Override
-			public void handleHttpResponse(HttpResponse httpResponse) {
-				String result = httpResponse.getResultAsString();
-				System.out.println("Received: " + result);
-			}
-			
-			@Override
-			public void failed(Throwable t) {
-				System.out.println("something went wrong: " + t.getMessage());
-			}
-			
-			@Override
-			public void cancelled() {
-				System.out.println("cancelled");
-			}
-		});
+		send(new JSONRPCRequest("logout", new String[] { profile.getUsername() }, clientID));
+		flag = false;
 	}
 	
-	public void poll() {
-		HttpRequest request = new HttpRequest(HttpMethods.POST);
-		request.setUrl("http://" + address);
-		request.setTimeOut(POLL_TIMEOUT);
-		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("poll", null, clientID);
-		final String content = json.toJson(message);
-		request.setContent(content);
-		System.out.println("Send: " + content);
-		Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
-			@Override
-			public void handleHttpResponse(HttpResponse httpResponse) {
-				String result = httpResponse.getResultAsString();
-				System.out.println("Received: " + result);
-				if (!result.equals("") && !result.equals("{}")) {
-					Json json = new Json();
-					JSONRPCResponse message = json.fromJson(JSONRPCResponse.class, result);
-					//Switch to roll screen
-					if (message.getResult().equals("Roll")) {
-						controller.setScreen(new DiceRollScreen(controller));
-					}
-					//Switch to game selection screen
-					else if (message.getResult().equals("Pick")) {
-						controller.setScreen(new GameSelectionScreen(controller));
-					}
-					//Switch back to main screen
-					else if (message.getResult().equals("Disconnect")) {
-						controller.setScreen(new LoginScreen(controller));
-					}
-					//Identify the correct game and start it
-					else {
-						controller.startGame(message.getResult().toString());
-					}
-				}
-			}
+	public JSONRPCResponse poll() {
+		send(new JSONRPCRequest("poll", new String[] { }, clientID));
+		do {
 			
-			@Override
-			public void failed(Throwable t) {
-				System.out.println("something went wrong: " + t.getMessage());
+			synchronized(responses) {
+				if (responses.size > 0)
+					return responses.removeFirst();
 			}
-			
-			@Override
-			public void cancelled() {
-				System.out.println("cancelled");
-			}
-		});
+		} while (true);
 	}
 	
 	public void sendRoll(short roll) {
-		HttpRequest request = new HttpRequest(HttpMethods.POST);
-		request.setUrl("http://" + address);
-		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("postRoll", new String[] { String.valueOf(roll) }, clientID);
-		String content = json.toJson(message);
-		request.setContent(content);
-		System.out.println("Send: " + content);
-		Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
-			@Override
-			public void handleHttpResponse(HttpResponse httpResponse) {
-				String result = httpResponse.getResultAsString();
-				System.out.println("Received: " + result);
-			}
-			
-			@Override
-			public void failed(Throwable t) {
-				System.out.println("something went wrong: " + t.getMessage());
-			}
-			
-			@Override
-			public void cancelled() {
-				System.out.println("cancelled");
-			}
-		});
+		send(new JSONRPCRequest("postRoll", new String[] { String.valueOf(roll) }, clientID));
 	}
 	
 	public void sendControl(String button) {
-		HttpRequest request = new HttpRequest(HttpMethods.POST);
-		request.setUrl("http://" + address);
-		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("postControl", new String[] { button }, clientID);
-		String content = json.toJson(message);
-		request.setContent(content);
-		System.out.println("Send: " + content);
-		Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
-			@Override
-			public void handleHttpResponse(HttpResponse httpResponse) {
-				String result = httpResponse.getResultAsString();
-				System.out.println("Received: " + result);
-			}
-			
-			@Override
-			public void failed(Throwable t) {
-				System.out.println("something went wrong: " + t.getMessage());
-			}
-			
-			@Override
-			public void cancelled() {
-				System.out.println("cancelled");
-			}
-		});
+		send(new JSONRPCRequest("postControl", new String[] { button }, clientID));
 	}
 	
 	public void sendScore(int score) {
-		HttpRequest request = new HttpRequest(HttpMethods.POST);
-		request.setUrl("http://" + address);
+		send(new JSONRPCRequest("postScore", new String[] { String.valueOf(score) }, clientID));
+	}
+	
+	public void send(JSONRPCRequest request) {
 		Json json = new Json();
-		JSONRPCRequest message = new JSONRPCRequest("postScore", new String[] { String.valueOf(score) }, clientID);
-		String content = json.toJson(message);
-		request.setContent(content);
-		System.out.println("Send: " + content);
-		Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
-			@Override
-			public void handleHttpResponse(HttpResponse httpResponse) {
-				String result = httpResponse.getResultAsString();
-				System.out.println("Received: " + result);
-			}
-			
-			@Override
-			public void failed(Throwable t) {
-				System.out.println("something went wrong: " + t.getMessage());
-			}
-			
-			@Override
-			public void cancelled() {
-				System.out.println("cancelled");
-			}
-		});
+		String content = json.toJson(request);
+		
+		try {
+			socket.getOutputStream().write(content.getBytes());
+		} catch (IOException e) {
+			logger.info("Fail to send: " + content);
+		}
+		logger.info("Send: " + content);
 	}
 }
